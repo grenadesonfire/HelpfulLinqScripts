@@ -5,17 +5,22 @@
 
 void Main()
 {
+	// Deck configuration
 	var cardCount = 99;
-	var target = 35;
-	
-	var trialRuns = 100000;
+	var target = 32;
 	var handSize = 7;
 	
-	var piles = 3;
+	// Trial configuration
+	var trialRuns = 100000;
 	
+	// Pile shuffle config
+	var pileMaxSize = 50;
+	
+	// Stack shuffle config
 	int stackMinSize = 5, stackMaxSize = 25;
 	int stackMinIterations = 3, stackMaxIterations = 15;
 
+	// Running the shuffle tests
 	var shuffleRunners = new ConcurrentQueue<StackShuffleTestRunner>();
 	var shuffleResults = new ConcurrentQueue<StackShuffleResult>();
 	
@@ -31,27 +36,48 @@ void Main()
 				}).Start();
 		}
 	}
+
+	// Running the pile tests
+	var pileRunners = new ConcurrentQueue<PileShuffleTestRunner>();
+	var pileResults = new ConcurrentQueue<PileShuffleResult>();
 	
-	do{
+	for (var pileSize = 2; pileSize <= pileMaxSize; pileSize++)
+	{
+		pileRunners.Enqueue(new PileShuffleTestRunner(cardCount, target, trialRuns, handSize, pileSize));
+		new Task(
+			() =>
+			{
+				pileRunners.TryDequeue(out var runner);
+				pileResults.Enqueue(runner.PileShuffleTrial());
+			}).Start();
+	}
+
+	// Update until finished.
+	do
+	{
 		Util.ClearResults();
-		Console.WriteLine($"{shuffleResults.Count()} / {(stackMaxSize - stackMinSize + 1) * (stackMaxIterations - stackMinIterations + 1)}");
+
+		Console.WriteLine($"Stack Shuffle Trials: {shuffleResults.Count()} / {(stackMaxSize - stackMinSize + 1) * (stackMaxIterations - stackMinIterations + 1)}");
+		Console.WriteLine($"Pile Shuffle Trials: {pileResults.Count()} / {pileMaxSize - 1}");
+
 		Task.Delay(1 * 1000).GetAwaiter().GetResult();
-	}while (shuffleResults.Count() < (stackMaxSize - stackMinSize + 1) * (stackMaxIterations - stackMinIterations + 1));
-	
-	var milis = shuffleResults.Sum(r => r.TotalTime.TotalMilliseconds);
-	Console.WriteLine($"Finished stack testing, Total across threads: {TimeSpan.FromMilliseconds(milis)}");
-//	var pileResults = new List<PileShuffleResult>();
-//	for (var pileSize = 2; pileSize < 50; pileSize++)
-//	{
-//		pileResults.Add(PileShuffleTrial(cardCount, target, trialRuns, handSize, pileSize));
-//		Console.WriteLine($"Completed pile: {pileSize}");
-//	}
-//	
+	} while (shuffleResults.Count() < (stackMaxSize - stackMinSize + 1) * (stackMaxIterations - stackMinIterations + 1) || pileResults.Count() < (pileMaxSize - 1));
+
+	Util.ClearResults();
+
+	Console.WriteLine($"Stack Shuffle Trials: {shuffleResults.Count()} / {(stackMaxSize - stackMinSize + 1) * (stackMaxIterations - stackMinIterations + 1)}");
+	Console.WriteLine($"Pile Shuffle Trials: {pileResults.Count()} / {pileMaxSize - 1}");
+
+	// Total time taken
+	Console.WriteLine($"Finished stack testing, Total across stack shuffle threads: {TimeSpan.FromMilliseconds(shuffleResults.Sum(r => r.TotalTime.TotalMilliseconds))}");
+	Console.WriteLine($"Finished stack testing, Total across stack shuffle threads: {TimeSpan.FromMilliseconds(pileResults.Sum(r => r.TotalTime.TotalMilliseconds))}");
+
+	// And Finally the results.
 	Console.WriteLine("Stack Shuffles");
 	shuffleResults.OrderByDescending(r => r.Perecentage).Dump();
-//
-//	Console.WriteLine("Pile Shuffles");
-//	pileResults.OrderByDescending(r => r.Perecentage).Dump();
+
+	Console.WriteLine("Pile Shuffles");
+	pileResults.OrderByDescending(r => r.Perecentage).Dump();
 }
 
 static int CountTargets(string deckString, int handSize, char target)
@@ -65,23 +91,6 @@ static void Swap(char[] array, int swapIdx){
 	array[0] = temp;
 }
 
-static void PrintResults(Dictionary<int,int> results, string label, int trialRuns)
-{
-	$"{label} Shuffles".Dump();
-
-	results.Keys.OrderBy(k => k).ToList().ForEach(k => $"{{{k}, {results[k]}}},".Dump());
-	var good = results.Where(r => r.Key >= 3).Sum(r => r.Value);
-
-	$"{good} / {trialRuns} ({(double)good / (double)trialRuns * 100l:#.##})".Dump("Playable:");
-}
-
-#region PileShuffle
-
-#endregion
-
-#region StackShuffle
-
-#endregion
 public class TestRunner
 {
 	protected Random rand = new Random((int)DateTime.Now.Ticks);
@@ -160,10 +169,21 @@ public class StackShuffleTestRunner : TestRunner
 
 class PileShuffleTestRunner : TestRunner
 {
-	PileShuffleResult PileShuffleTrial(int cardCount, int target, int trialRuns, int handSize, int numberOfPiles)
+	private int cardCount, target, trialRuns, handSize, numberOfPiles;
+	
+	public PileShuffleTestRunner(int cardCount, int target, int trialRuns, int handSize, int numberOfPiles){
+		this.cardCount = cardCount;
+		this.target = target;
+		this.trialRuns = trialRuns;
+		this.handSize = handSize;
+		this.numberOfPiles = numberOfPiles;
+	}
+	
+	public PileShuffleResult PileShuffleTrial()
 	{
 		var results = new Dictionary<int, int>();
-
+		var stopWatch = new Stopwatch();
+		stopWatch.Start();
 		for (var trial = 0; trial < trialRuns; trial++)
 		{
 			var deck = GenerateShuffledDeck(target, cardCount);
@@ -175,13 +195,15 @@ class PileShuffleTestRunner : TestRunner
 			if (!results.ContainsKey(count)) results.Add(count, 1);
 			else results[count]++;
 		}
+		stopWatch.Stop();
 
 		return new PileShuffleResult
 		{
 			NumberOfPiles = numberOfPiles,
 			CountOfPlayableHands = results,
 			TotalPlayable = results.Where(r => r.Key >= 3 && r.Key <= 5).Sum(r => r.Value),
-			TotalRun = trialRuns
+			TotalRun = trialRuns,
+			TotalTime = stopWatch.Elapsed
 		};
 	}
 
