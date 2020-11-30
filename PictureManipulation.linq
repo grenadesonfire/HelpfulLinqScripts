@@ -7,7 +7,7 @@
 
 void Main()
 {
-	var dir = @"C:\Media\Xpray\Characters\Nergigante Pose";
+//	var dir = @"C:\Media\Xpray\Characters\Nergigante Pose";
 	var outputDir = @"C:\Media\Creations";
 	
 	var dirPath = @"C:\Media\Xpray\Characters\Wennie Teacher and Aurenn\Transparent";//new DirectoryInfo(dir).GetDirectories().First(n => n.Name.Contains("Alt")).FullName;
@@ -67,6 +67,80 @@ void Main()
 	EliminateDupes(outputDir);
 	stopWatch.Stop();
 	stopWatch.Elapsed.Dump("Finished distinct verification");
+}
+
+void CleanLooseBits(Bitmap bitmap, int groupThreshHold)
+{
+	var bitGroup = new List<List<Point>>();
+
+	var visited = new Dictionary<int, Dictionary<int, bool>>();
+	
+	for (var z = 0; z < bitmap.Height; z++)
+	{
+		for (var x = 0; x < bitmap.Width; x++)
+		{
+			if (bitmap.GetPixel(x, z).A != 0 && !HasBeenVisited(visited, new Point(x,z)))
+			{
+				var group = GetPixelGroup(bitmap, x, z, visited);
+
+				if (group.Count() < groupThreshHold)
+				{
+					foreach (var p in group)
+					{
+						bitmap.SetPixel(p.X, p.Y, Color.Transparent);
+					}
+				}
+			}
+		}
+	}
+}
+
+bool HasBeenVisited(Dictionary<int, Dictionary<int, bool>> visited, Point p)
+{
+	return visited.Keys.Contains(p.Y) && visited[p.Y].Keys.Contains(p.X) && visited[p.Y][p.X];
+}
+
+void Visit(Dictionary<int, Dictionary<int, bool>> visited, Point p)
+{
+	if(!visited.Keys.Contains(p.Y)) visited.Add(p.Y, new Dictionary<int, bool>());
+	if(!visited[p.Y].Keys.Contains(p.X)) visited[p.Y].Add(p.X, true);
+}
+
+List<Point> GetPixelGroup(Bitmap bp, int x, int z, Dictionary<int, Dictionary<int, bool>> visited)
+{
+	var q = new Queue<Point>();
+	var points = new List<Point>();
+	
+	q.Enqueue(new Point(x,z));
+
+	while (q.TryDequeue(out var p))
+	{
+		if(!HasBeenVisited(visited, p) )
+		{
+			Visit(visited, p);
+			
+			points.Add(p);
+
+			var dx = new int[] { -1, 0, 1, -1, 1, -1, 0, 1 };
+			var dz = new int[] { -1, -1, -1, 0, 0, 1, 1, 1 };
+
+			for (var idx = 0; idx < dx.Length; idx++)
+			{
+				var next = new Point(p.X + dx[idx], p.Y + dz[idx]);
+
+				if (
+					!(next.X < 0 || next.Y < 0 || next.X >= bp.Width || next.Y >= bp.Height) && 
+					!HasBeenVisited(visited, next) &&
+					!q.Any(v => v.X == next.X && v.Y == next.Y) &&
+					bp.GetPixel(next.X, next.Y).A != 0)
+				{
+					q.Enqueue(next);
+				}
+			}
+		}
+	}
+	
+	return points;
 }
 
 void Examples()
@@ -355,7 +429,7 @@ void CombineDirect(string basePhoto, string[] selectedParts, string outDir, stri
 	}
 }
 
-void DiffAll(string basePath, IEnumerable<FileInfo> fpaths)
+void DiffAll(string basePath, IEnumerable<FileInfo> fpaths, int groupThreshHold = 250)
 {
 	var dirInfo = new DirectoryInfo(Path.Combine(fpaths.FirstOrDefault().Directory.FullName, "Pieces"));
 	
@@ -366,6 +440,7 @@ void DiffAll(string basePath, IEnumerable<FileInfo> fpaths)
 		{
 			using(var bmp = Diff(basePath, f.FullName))
 			{
+				CleanLooseBits(bmp, groupThreshHold);
 				bmp.Save(Path.Combine(dirInfo.FullName, f.Name.Replace(".jpg",".png")).Dump());
 			}
 		});
