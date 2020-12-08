@@ -7,11 +7,11 @@
 
 void Main()
 {
-//	var dir = @"C:\Media\Xpray\Characters\Nergigante Pose";
+	var dir = @"C:\Media\Xpray\Characters\Aurenn Volley Ball";
 	var outputDir = @"C:\Media\Creations";
 	
-	var dirPath = @"C:\Media\Xpray\Characters\Wennie Teacher and Aurenn\Transparent";//new DirectoryInfo(dir).GetDirectories().First(n => n.Name.Contains("Alt")).FullName;
-	var basePhoto = @"C:\Media\Xpray\Characters\Wennie Teacher and Aurenn\xpr_wennie_aurenn_teacher_color (Transparent 01).png";//new DirectoryInfo(dir).GetFiles().First(n => n.Name.Contains("High")).FullName;
+	var dirPath = new DirectoryInfo(dir).GetDirectories().First(n => n.Name.Contains("Alt")).FullName;
+	var basePhoto = new DirectoryInfo(dir).GetFiles().First(n => n.Name.Contains("High")).FullName;
 	
 	var dirInfo = new DirectoryInfo(dirPath);
 	
@@ -69,11 +69,13 @@ void Main()
 	stopWatch.Elapsed.Dump("Finished distinct verification");
 }
 
-void CleanLooseBits(Bitmap bitmap, int groupThreshHold)
+void CleanLooseBitsAndSavePieces(string fpath, Bitmap bitmap, int groupThreshHold)
 {
 	var bitGroup = new List<List<Point>>();
 
 	var visited = new Dictionary<int, Dictionary<int, bool>>();
+	
+	var success = 0;
 	
 	for (var z = 0; z < bitmap.Height; z++)
 	{
@@ -89,6 +91,16 @@ void CleanLooseBits(Bitmap bitmap, int groupThreshHold)
 					{
 						bitmap.SetPixel(p.X, p.Y, Color.Transparent);
 					}
+				}
+				else{
+					var bmp = new Bitmap(bitmap.Width, bitmap.Height);
+
+					foreach (var p in group)
+					{
+						bmp.SetPixel(p.X, p.Y, bitmap.GetPixel(p.X, p.Y));
+					}
+
+					bmp.Save($"{fpath.Replace(".png", "")}.{success++}.png");
 				}
 			}
 		}
@@ -440,12 +452,14 @@ void DiffAll(string basePath, IEnumerable<FileInfo> fpaths, int groupThreshHold 
 		{
 			using(var bmp = Diff(basePath, f.FullName))
 			{
-				CleanLooseBits(bmp, groupThreshHold);
-				bmp.Save(Path.Combine(dirInfo.FullName, f.Name.Replace(".jpg",".png")).Dump());
+				CleanLooseBitsAndSavePieces(
+					Path.Combine(dirInfo.FullName, f.Name.Replace(".jpg",".png")),
+					bmp, 
+					groupThreshHold);
 			}
 		});
-	
-	//CreateMatrix(dirInfo.FullName);
+	dirInfo.FullName.Dump("DiffAll()");		
+	//EliminateDupes(dirInfo.FullName);
 }
 
 List<CollisionMap> CreateMatrix(string dirPath)
