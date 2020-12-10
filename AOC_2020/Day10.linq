@@ -4,7 +4,7 @@ const string INPUT_FOLDER = @"C:\Users\Nick\Documents\LINQPad Queries\GitLinq\AO
 void Main()
 {
 	var inputs = File.ReadAllLines(
-    	Path.Combine(INPUT_FOLDER, "Day10")
+    	Path.Combine(INPUT_FOLDER, "Day10.Example")
 		);
 
 	FirstHalf(inputs).Dump();
@@ -18,7 +18,9 @@ int FirstHalf(string[] lines){
 	
 	var count1 = ints.Where(i => ints.IndexOf(i) != 0 && i - ints[ints.IndexOf(i)-1] == 1).Count().Dump("Count 1");
 	
-	var count3 = ints.Where(i => ints.IndexOf(i) != 0 && i - ints[ints.IndexOf(i)-1] == 3).Count();
+	var count2 = ints.Where(i => ints.IndexOf(i) != 0 && i - ints[ints.IndexOf(i)-1] == 2).Count().Dump("Count 2");
+	
+	var count3 = ints.Where(i => ints.IndexOf(i) != 0 && i - ints[ints.IndexOf(i)-1] == 3).Count().Dump("Count 3");
 	
 	return count1 * (count3+1);
 }
@@ -31,7 +33,7 @@ void SecondHalf(string[] lines)
 	
 	var treeNode = Tree.Arrange(ints);
 	
-	treeNode.CountPaths().Dump("Paths:");
+	treeNode.CountPathsBackward().Dump("Paths:");
 }
 
 class Tree{
@@ -40,23 +42,71 @@ class Tree{
 	
 	public long CountPaths()
 	{
-		var path = new List<int>() { _root.Value };
-		return CountPaths(_root.Jump1) 
-			+  CountPaths(_root.Jump2) 
-			+ CountPaths(_root.Jump3);
+		//var path = new List<int>() { _root.Value };
+		//var total = 1;
+		
+		//foreach(var item in _items){
+		//	total += item.ValidJumps > 1 ? item.ValidJumps : 0;
+		//}
+		//_items.Dump("Items");
+		//total.Dump("Total");
+
+		_items.Where(i => i.BackWardJumps.Count() == 0).Count().Dump("Number of Nodes with no parent");
+
+		long ret = 0;
+
+		foreach (var jump in _root.ForwardJumps)
+		{
+			ret += CountPaths(jump);
+		}
+
+		return ret;
 	}
-	
+
+	public long CountPathsBackward()
+	{
+		_items.Where(i => i.BackWardJumps.Count() == 0).Count().Dump("Number of Nodes with no parent");
+
+		long ret = 0;
+
+		var endNode = _items.LastOrDefault();
+
+		foreach (var jump in endNode.BackWardJumps)
+		{
+			ret += CountPathsBackward(jump);
+		}
+
+		return ret;
+	}
+
 	private long CountPaths(TreeNode node){
 		if(node==null) return 0;
 
-		if (node.Jump1 == null && node.Jump2 == null && node.Jump3 == null){
+		if (node.ForwardJumps.Count() == 0){
 			return node.Value == _items.Max(n => n.Value) ? 1 : 0;
 		}
 		
-		return 
-			CountPaths(node.Jump1) 
-			+ CountPaths(node.Jump2)
-			+ CountPaths(node.Jump3);
+		long ret = 0;
+		
+		foreach(var jump in node.ForwardJumps){
+			ret += CountPaths(jump);
+		}
+		
+		return ret;
+	}
+	
+	private long CountPathsBackward(TreeNode node){
+		long ret = 0;
+		
+		if(node.CalculatedBackPaths != -1) return node.CalculatedBackPaths
+		
+		foreach(var path in node.BackWardJumps){
+			ret += CountPathsBackward(path);
+		}
+		
+		node.CalculatedBackPaths = Math.Max(ret, 1);
+		
+		return node.CalculatedBackPaths;
 	}
 	
 	public void Sort(){
@@ -64,9 +114,15 @@ class Tree{
 		_root = _items[0];
 		
 		foreach(var item in _items){
-			item.Jump1 = _items.FirstOrDefault(n => n.Value == item.Value + 1);
-			item.Jump2 = _items.FirstOrDefault(n => n.Value == item.Value + 2);
-			item.Jump3 = _items.FirstOrDefault(n => n.Value == item.Value + 3);
+			for(var jump = 1;jump<=3;jump++){
+				var jumpItem = _items.FirstOrDefault(fj => fj.Value == item.Value + jump);
+
+				if (jumpItem != null)
+				{
+					item.ForwardJumps.Add(jumpItem);
+					jumpItem.BackWardJumps.Add(item);
+				}
+			}
 		}
 	}
 	
@@ -85,8 +141,17 @@ class Tree{
 
 class TreeNode{
 	public int Value { get; set; }
-	public TreeNode Jump1 { get; set; }
-	public TreeNode Jump2 { get; set; }
-	public TreeNode Jump3 { get; set; }
+	
+	public List<TreeNode> ForwardJumps { get; set; } = new List<TreeNode>();
+	
+	public List<TreeNode> BackWardJumps { get; set; } = new List<TreeNode>();
+	
+	public long CalculatedBackPaths { get; set; } = -1;
+	
+	public int ValidJumps {
+		get {
+			return ForwardJumps.Count();
+		}
+	}
 }
 
