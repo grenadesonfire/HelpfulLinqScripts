@@ -4,7 +4,7 @@ const string INPUT_FOLDER = @"C:\Users\Nick\Documents\LINQPad Queries\GitLinq\AO
 void Main()
 {
 	var inputs = File.ReadAllLines(
-    	Path.Combine(INPUT_FOLDER, "Day10.Example")
+    	Path.Combine(INPUT_FOLDER, "Day10")
 		);
 
 	FirstHalf(inputs).Dump();
@@ -39,29 +39,6 @@ void SecondHalf(string[] lines)
 class Tree{
 	private TreeNode _root;
 	private List<TreeNode> _items;
-	
-	public long CountPaths()
-	{
-		//var path = new List<int>() { _root.Value };
-		//var total = 1;
-		
-		//foreach(var item in _items){
-		//	total += item.ValidJumps > 1 ? item.ValidJumps : 0;
-		//}
-		//_items.Dump("Items");
-		//total.Dump("Total");
-
-		_items.Where(i => i.BackWardJumps.Count() == 0).Count().Dump("Number of Nodes with no parent");
-
-		long ret = 0;
-
-		foreach (var jump in _root.ForwardJumps)
-		{
-			ret += CountPaths(jump);
-		}
-
-		return ret;
-	}
 
 	public long CountPathsBackward()
 	{
@@ -78,27 +55,11 @@ class Tree{
 
 		return ret;
 	}
-
-	private long CountPaths(TreeNode node){
-		if(node==null) return 0;
-
-		if (node.ForwardJumps.Count() == 0){
-			return node.Value == _items.Max(n => n.Value) ? 1 : 0;
-		}
-		
-		long ret = 0;
-		
-		foreach(var jump in node.ForwardJumps){
-			ret += CountPaths(jump);
-		}
-		
-		return ret;
-	}
 	
 	private long CountPathsBackward(TreeNode node){
 		long ret = 0;
 		
-		if(node.CalculatedBackPaths != -1) return node.CalculatedBackPaths
+		if(node.CalculatedBackPaths != -1) return node.CalculatedBackPaths;
 		
 		foreach(var path in node.BackWardJumps){
 			ret += CountPathsBackward(path);
@@ -110,7 +71,6 @@ class Tree{
 	}
 	
 	public void Sort(){
-		//Assumes pre sorted list.
 		_root = _items[0];
 		
 		foreach(var item in _items){
