@@ -10,22 +10,22 @@ void Main()
 		new string[]
 		{
 			"0,3,6",
-			//"1,3,2",
-			//"2,1,3",
-			//"1,2,3",
-			//"0,5,4,1,10,14,7"
+			"1,3,2",
+			"2,1,3",
+			"1,2,3",
+			"0,5,4,1,10,14,7"
 		};
 
 	foreach(var test in tests) FirstHalf(test);
 
-	//SecondHalf(tests.LastOrDefault(), 30000);
+	SecondHalf(tests.LastOrDefault(), 30000000);
 }
 
 void FirstHalf(string lines)
 {
 	var ec = new ElfCounter(lines);
 	
-	ec.CountUntil(10);
+	ec.CountUntil(2020);
 }
 
 void SecondHalf(string lines, int limit)
@@ -64,56 +64,38 @@ class ElfCounter
 	public void CountUntil(int limit, bool print = false)
 	{
 		while(_round != limit){
-			if(_round % (limit/10) == 0 && print) Console.WriteLine("10% has passed.");
 		
 			var last = _countHistory.Last();
 			
-			if(_numHits[last] == 0){
+			
+			if(!_numHits.ContainsKey(last) || _numHits[last] == 0){
 				_countHistory.Add(0);
 				
 				//Special case! check 0
 				if(_numHits.Keys.Contains(0)) _numHits[0] = 2;
 				
 				_numHits[last] = 2;
-				_lastHit[last] = _round;
 			}
 			else
 			{
 				var spoken = _round - _lastHit[last];
 
-				$"Round: {_round + 1} Last: {last} Sub {_round} {_lastHit[last]} Spoken: {spoken}".Dump();
+				//$"Round: {_round + 1} \r\n\tLast: {last} \r\n\tSub {_round} {_lastHit[last]} Spoken: {spoken}\r\n".Dump();
 				
 				_countHistory.Add(spoken);
 				
 				// See if spoken number is new
-				if(_numHits.TryAdd(spoken, 0)){
-					_lastHit.Add(spoken, _round);
-				}
-				else{
+				if(!_numHits.TryAdd(spoken, 0)){
 					_numHits[spoken] = Math.Max(_numHits[spoken]+1, 2);
 				}
 			}
 			
-			//// Check if last had been spoken before
-			//if(_numHits[last] <= 1){
-			//	_lastHit[last] = _countHistory.Count();
-			//	_numHits[last]++;
-			//	_countHistory.Add(0);
-			//}
-			//// Has been spoken before
-			//else{
-			//	var count = _countHistory.Count();
-			//	var prevIndexMinus1 = _lastHit[last];
-			//	
-			//	var val = count - prevIndexMinus1;
-			//	_countHistory.Add(val);
-			//	
-			//	if(!_lastHit.TryAdd(val, _countHistory.Count())) _lastHit[val] = _countHistory.Count();
-			//}
+			if(!_lastHit.TryAdd(last, _round)) _lastHit[last] = _round;
+			
 			_round++;
 		}
 		
 		_countHistory.LastOrDefault().Dump(_start);
-		_countHistory.Dump("History");
+		//_countHistory.Dump("History");
 	}
 }
