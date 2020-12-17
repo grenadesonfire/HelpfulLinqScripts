@@ -38,9 +38,8 @@ void SecondHalf(string[] lines)
 	foreach (var line in lines)
 	{
 		s.ProcessWaypoint(line);
-		//s.Dump($"{line}");
-		//s.ToString().Dump();
 	}
+	
 	new
 	{
 		Ship = s,

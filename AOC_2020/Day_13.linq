@@ -93,9 +93,6 @@ class Schedule
 		
 		long timeStamp = Positions[0].BusId;
 		
-		//while(!CascadingDepartures(timeStamp)) timeStamp += Positions[0].BusId;
-		
-		
 		//Crafting a wolframalpha query for CRT
 		// (Chinese remainder theorem)
 		var sb = new StringBuilder();
