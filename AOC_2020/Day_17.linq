@@ -23,12 +23,161 @@ void FirstHalf(string[] lines)
 
 void SecondHalf(string[] lines)
 {
+	var c4d = new Conway4D(lines);
 	
+	for(int run=0;run<6;run++) c4d.Simulate();
+	
+	c4d.SumActiveWithTime().Dump("Part 2");
+}
+
+class Conway4D : Conway3D
+{
+	private List<Conway3D> _hyperCubespace;
+	
+	public Conway4D(string[] lines){
+		_hyperCubespace = new List<Conway3D>{
+			new Conway3D(lines)
+		};
+	}
+
+	public override void Simulate()
+	{
+		Expand();
+
+		CalculateFlippers();
+
+		//DebugTimeAndSpace(true);
+
+		Flip();
+		
+		//DebugTimeAndSpace();
+	}
+
+	public override void CalculateFlippers()
+	{
+		foreach(var (cube, cubeIdx) in _hyperCubespace.WithIndex())
+		{
+			foreach (var (layer, layerIdx) in cube._layers.WithIndex())
+			{
+				foreach (var (line, lineIdx) in layer.WithIndex())
+				{
+					for (var idx = 0; idx < line.Count(); idx++)
+					{
+						// Check if should update counts
+						if ((line[idx] & 1) == 1)
+						{
+							UpdateCounts(cubeIdx, layerIdx, lineIdx, idx, 1);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	public override void Flip()
+	{
+		foreach (var (cube, cubeIdx) in _hyperCubespace.WithIndex())
+		{
+			foreach (var (layer, layerIdx) in cube._layers.WithIndex())
+			{
+				foreach (var (line, lineIdx) in layer.WithIndex())
+				{
+					for (var idx = 0; idx < line.Count(); idx++)
+					{
+						// Check if should update counts
+						if ((line[idx] & 1) == 1)
+						{
+							if ((line[idx] >> 2) == 2 || (line[idx] >> 2) == 3)
+							{
+								line[idx] = 1;
+							}
+							else
+							{
+								line[idx] = 0;
+							}
+						}
+						// Inactive
+						else
+						{
+							if ((line[idx] >> 2) == 3)
+							{
+								line[idx] = 1;
+							}
+							else
+							{
+								line[idx] = 0;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private void UpdateCounts(int t, int z, int y, int x, int amtIncrease)
+	{
+		var dx = new int[] { -1, 0, 1, -1, 0, 1, -1, 0, 1, -1, 0, 1, -1, 0, 1, -1, 0, 1, -1, 0, 1, -1, 0, 1, -1, 0, 1, -1, 0, 1, -1, 0, 1, -1, 0, 1, -1, 0, 1, -1, 1, -1, 0, 1, -1, 0, 1, -1, 0, 1, -1, 0, 1, -1, 0, 1, -1, 0, 1, -1, 0, 1, -1, 0, 1, -1, 0, 1, -1, 0, 1, -1, 0, 1, -1, 0, 1, -1, 0, 1 };
+		var dy = new int[] { -1, -1, -1, 0, 0, 0, 1, 1, 1, -1, -1, -1, 0, 0, 0, 1, 1, 1, -1, -1, -1, 0, 0, 0, 1, 1, 1, -1, -1, -1, 0, 0, 0, 1, 1, 1, -1, -1, -1, 0, 0, 1, 1, 1, -1, -1, -1, 0, 0, 0, 1, 1, 1, -1, -1, -1, 0, 0, 0, 1, 1, 1, -1, -1, -1, 0, 0, 0, 1, 1, 1, -1, -1, -1, 0, 0, 0, 1, 1, 1 };
+		var dz = new int[] { -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+		var dt = new int[] { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+
+		// check the surrounding cube and time
+		// 1 less than max because we don't check the center
+		for (int idx = 0; idx < 80; idx++)
+		{
+			if (
+				ValidT(t + dt[idx])
+				&& _hyperCubespace[0].ValidZ(z + dz[idx])
+				&& _hyperCubespace[0].ValidY(y + dy[idx])
+				&& _hyperCubespace[0].ValidX(x + dx[idx]))
+			{
+				IncrementWithT(
+					t + dt[idx],
+					z + dz[idx],
+					y + dy[idx],
+					x + dx[idx]);
+			}
+		}
+	}
+
+	private void IncrementWithT(int t, int z, int y, int x)
+	{
+		//Add one to the upper n-2 bits, the bottom two are used for other info
+		var inc = (_hyperCubespace[t]._layers[z][y][x] >> 2) + 1;
+
+		//Apply the increment back to the numer, &3 retains the bottom bits of information.
+		_hyperCubespace[t]._layers[z][y][x] = (short)((inc << 2) | (_hyperCubespace[t]._layers[z][y][x] & 3));
+	}
+
+	public override void Expand()
+	{
+		foreach(var c3d in _hyperCubespace){
+			c3d.Expand();
+		}
+		
+		_hyperCubespace.Insert(0, _hyperCubespace[0].CloneEmpty());
+		_hyperCubespace.Insert(_hyperCubespace.Count(), _hyperCubespace[0].CloneEmpty());
+	}
+
+	public long SumActiveWithTime()
+	{
+		return _hyperCubespace.Sum(l => l._layers.Sum(l => l.Sum(l2 => l2.Sum(l => (long)l))));
+	}
+
+	public bool ValidT(int num) => num >= 0 && num < _hyperCubespace.Count();
+	
+	private void DebugTimeAndSpace(bool counts = false){
+		foreach (var (cube, idx) in _hyperCubespace.WithIndex())
+		{
+			$"Cube: {idx}".Dump();
+			cube.DebugLayers(counts);
+		}
+	}
 }
 
 class Conway3D
 {
-	private List<List<List<short>>> _layers;
+	public List<List<List<short>>> _layers;
 	
 	public Conway3D(string[] lines)
 	{
@@ -42,8 +191,13 @@ class Conway3D
 		
 		_layers.Add(initLayer);
 	}
-	
-	public void Simulate() 
+
+	public Conway3D()
+	{
+		_layers = new List<System.Collections.Generic.List<System.Collections.Generic.List<short>>>();
+	}
+
+	public virtual void Simulate() 
 	{		
 		Expand();
 		
@@ -52,7 +206,7 @@ class Conway3D
 		Flip();
 	}
 	
-	private void Expand()
+	public virtual void Expand()
 	{
 		//Expand
 		var width = _layers[0][0].Count();
@@ -83,7 +237,7 @@ class Conway3D
 		_layers.Insert(_layers.Count(), bottomLayer);
 	}
 	
-	private void CalculateFlippers()
+	public virtual void CalculateFlippers()
 	{
 		foreach(var (layer, layerIdx) in _layers.WithIndex())
 		{
@@ -97,11 +251,9 @@ class Conway3D
 				}
 			}
 		}
-		
-		
 	}
 	
-	private void Flip()
+	public virtual void Flip()
 	{
 		foreach (var (layer, layerIdx) in _layers.WithIndex())
 		{
@@ -115,11 +267,9 @@ class Conway3D
 						if ((line[idx] >> 2) == 2 || (line[idx] >> 2) == 3)
 						{
 							line[idx] = 1;
-							//$"{layerIdx},{lineIdx},{idx}: active stays active".Dump();
 						}
 						else{
 							line[idx] = 0;
-							//$"{layerIdx},{lineIdx},{idx}: active shifts unactive".Dump();
 						}
 					}
 					// Inactive
@@ -127,12 +277,10 @@ class Conway3D
 					{
 						if((line[idx] >> 2)	== 3){
 							line[idx] = 1;
-							//$"{layerIdx},{lineIdx},{idx}: inactive shifts active".Dump();
 						}
 						else
 						{
 							line[idx] = 0;
-							//$"{layerIdx},{lineIdx},{idx}: inactive statys inactive".Dump();
 						}
 					}
 				}
@@ -160,7 +308,7 @@ class Conway3D
 		}
 	}
 
-	private void Increment(int z, int y, int x)
+	public void Increment(int z, int y, int x)
 	{
 		//Add one to the upper n-2 bits, the bottom two are used for other info
 		var inc = (_layers[z][y][x] >> 2) + 1;
@@ -169,21 +317,11 @@ class Conway3D
 		_layers[z][y][x] = (short)((inc << 2) | (_layers[z][y][x] & 3));
 	}
 	
-	private bool ValidZ(int num) => num >= 0 && num < _layers.Count();
-	private bool ValidY(int num) => num >= 0 && num < _layers[0].Count();
-	private bool ValidX(int num) => num >= 0 && num < _layers[0][0].Count();
+	public bool ValidZ(int num) => num >= 0 && num < _layers.Count();
+	public bool ValidY(int num) => num >= 0 && num < _layers[0].Count();
+	public bool ValidX(int num) => num >= 0 && num < _layers[0][0].Count();
 
-	private bool IsGonnaFlip(short num)
-	{
-		return (num & (1 << 1)) >> 1 == 1;
-	}
-
-	private void SetWillFlip(ref short num)
-	{
-		num |= (1 << 1);
-	}
-
-	private void DebugLayers(bool outputCounts = false)
+	public void DebugLayers(bool outputCounts = false)
 	{
 		new {
 			Layers = _layers.Select(l => LayerToString(l, outputCounts)).ToList()
@@ -202,21 +340,22 @@ class Conway3D
 		return sb.ToString();
 	}
 
-	public long TotalVolume(int runs = 6)
-	{
-		return TotalVolume(
-			_layers[0][0].Count(),
-			_layers[0].Count(),
-			runs);
-	}
-	
-	public long TotalVolume(int width, int height, int runs)
-	{
-		return (width + runs*2) * (height + runs*2) * runs;
-	}
-
-	internal long SumActive()
+	public long SumActive()
 	{
 		return _layers.Sum(l => l.Sum(l2 => l2.Sum(l => (long)l)));
+	}
+	
+	public Conway3D CloneEmpty(){
+		var ret = new Conway3D();
+		
+		foreach(var layer in _layers){
+			var copylayer = new List<List<short>>();
+			foreach(var line in layer){
+				copylayer.Add(Enumerable.Repeat((short)0, line.Count()).ToList());
+			}
+			ret._layers.Add(copylayer);
+		}
+		
+		return ret;
 	}
 }
