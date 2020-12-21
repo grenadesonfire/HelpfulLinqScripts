@@ -4,7 +4,7 @@ const string INPUT_FOLDER = @"C:\Users\Nick\Documents\LINQPad Queries\GitLinq\AO
 void Main()
 {
 	var inputs = File.ReadAllLines(
-    	Path.Combine(INPUT_FOLDER, "Day17.Example")
+    	Path.Combine(INPUT_FOLDER, "Day17")
 		);
 	
 	FirstHalf(inputs);
@@ -16,9 +16,9 @@ void FirstHalf(string[] lines)
 {
 	var c3d = new Conway3D(lines);
 	
-	c3d.TotalVolume().Dump("Counts");
+	for(int run=0;run<6;run++) c3d.Simulate();
 	
-	c3d.Simulate();
+	c3d.SumActive().Dump("Part 1");
 }
 
 void SecondHalf(string[] lines)
@@ -44,18 +44,12 @@ class Conway3D
 	}
 	
 	public void Simulate() 
-	{
-		DebugLayers();
-		
+	{		
 		Expand();
-		
-		DebugLayers();
 		
 		CalculateFlippers();
 		
-		//Flip();
-		
-		DebugLayers();
+		Flip();
 	}
 	
 	private void Expand()
@@ -64,23 +58,17 @@ class Conway3D
 		var width = _layers[0][0].Count();
 		var height = _layers[0].Count();
 
-		if (_layers.Count() == width)
-		{
-			foreach (var layer in _layers)
-			{
-				foreach (var line in layer)
-				{
-					line.Insert(0, 0);
-					line.Insert(line.Count(), 0);
-				}
 
-				layer.Insert(0, Enumerable.Repeat((short)0, width + 2).ToList());
-				layer.Insert(layer.Count(), Enumerable.Repeat((short)0, width + 2).ToList());
+		foreach (var layer in _layers)
+		{
+			foreach (var line in layer)
+			{
+				line.Insert(0, 0);
+				line.Insert(line.Count(), 0);
 			}
-		}
-		else{
-			width-=2;
-			height-=2;
+
+			layer.Insert(0, Enumerable.Repeat((short)0, width + 2).ToList());
+			layer.Insert(layer.Count(), Enumerable.Repeat((short)0, width + 2).ToList());
 		}
 		
 		var topLayer = new List<List<short>>();
@@ -104,18 +92,20 @@ class Conway3D
 				{
 					// Check if should update counts
 					if((line[idx] & 1) == 1){
-						UpdateCounts(layerIdx, lineIdx-1, idx, 1);
+						UpdateCounts(layerIdx, lineIdx, idx, 1);
 					}
 				}
 			}
 		}
+		
+		
 	}
 	
 	private void Flip()
 	{
-		foreach (var layer in _layers)
+		foreach (var (layer, layerIdx) in _layers.WithIndex())
 		{
-			foreach (var line in layer)
+			foreach (var (line, lineIdx) in layer.WithIndex())
 			{
 				for (var idx = 0; idx < line.Count(); idx++)
 				{
@@ -125,23 +115,25 @@ class Conway3D
 						if ((line[idx] >> 2) == 2 || (line[idx] >> 2) == 3)
 						{
 							line[idx] = 1;
+							//$"{layerIdx},{lineIdx},{idx}: active stays active".Dump();
 						}
 						else{
 							line[idx] = 0;
+							//$"{layerIdx},{lineIdx},{idx}: active shifts unactive".Dump();
 						}
 					}
-					else if((line[idx] & 1) == 0){
+					// Inactive
+					else
+					{
 						if((line[idx] >> 2)	== 3){
 							line[idx] = 1;
+							//$"{layerIdx},{lineIdx},{idx}: inactive shifts active".Dump();
 						}
 						else
 						{
 							line[idx] = 0;
+							//$"{layerIdx},{lineIdx},{idx}: inactive statys inactive".Dump();
 						}
-					}
-					else{
-						"How".Dump("134");
-						line[idx] = 0;
 					}
 				}
 			}
@@ -191,19 +183,20 @@ class Conway3D
 		num |= (1 << 1);
 	}
 
-	private void DebugLayers()
+	private void DebugLayers(bool outputCounts = false)
 	{
 		new {
-			Layers = _layers.Select(l => LayerToString(l)).ToList()
+			Layers = _layers.Select(l => LayerToString(l, outputCounts)).ToList()
 		}.Dump("State");
 	}
 
-	private string LayerToString(List<List<short>> layer)
+	private string LayerToString(List<List<short>> layer, bool outputCounts)
 	{
 		var sb = new StringBuilder();
 		
 		foreach(var line in layer){
-			sb.AppendLine(string.Join("", line.Select(l => (l & 1) == 1 ? '#' : '.')));
+			if(outputCounts) sb.AppendLine(string.Join(' ', line.Select(l => l >> 2)));
+			else sb.AppendLine(string.Join("", line.Select(l => (l & 1) == 1 ? '#' : '.')));
 		}
 		
 		return sb.ToString();
@@ -220,5 +213,10 @@ class Conway3D
 	public long TotalVolume(int width, int height, int runs)
 	{
 		return (width + runs*2) * (height + runs*2) * runs;
+	}
+
+	internal long SumActive()
+	{
+		return _layers.Sum(l => l.Sum(l2 => l2.Sum(l => (long)l)));
 	}
 }
