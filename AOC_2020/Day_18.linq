@@ -15,9 +15,13 @@ void Main()
 	//PolishNotation.Solve("5 + (8 * 3 + 9 + 3 * 4 * 3)").Dump();
 	////PolishNotation.Solve("2 * 3 + (4 * 5)");
 	
-	PolishNotation.Solve("2 * 3 + (4 * 5)", true).Dump();
+	//PolishNotation.Solve("2 * 3 + (4 * 5)", true).Dump();
 	
 	FirstHalf(inputs);
+
+	//PolishNotation.SolveWPresidence("1 + 2 * 3 + 4 * 5 + 6", true).Dump("Hmm");
+	//PolishNotation.SolveWPresidence("1 + (2 * 3) + (4 * (5 + 6)) ", true).Dump("Hmm");
+	//PolishNotation.SolveWPresidence("2 * 3 + (4 * 5)").Dump();
 
 	SecondHalf(inputs);
 }
@@ -29,7 +33,7 @@ void FirstHalf(string[] lines)
 
 void SecondHalf(string[] lines)
 {
-	
+	PolishNotation.SolveWPresidence(lines).Dump("Part 2");
 }
 
 enum OperatorType
@@ -49,28 +53,94 @@ class Notation{
 class PolishNotation
 {
 	private List<Notation> _notations;
+	private string _line;
 	
 	public PolishNotation(string line)
 	{
 		_notations = new List<UserQuery.Notation>();
+		_line = line;
+	}
+	
+	public void Initialize()
+	{
 		var splits =
-			line
+			_line
 				.Replace("(", " ( ")
 				.Replace(")", " ) ")
 				.Split(' ', StringSplitOptions.RemoveEmptyEntries)
 				.Select(l =>
 				{
-					if(long.TryParse(l, out var num)) return new Notation{ Value = num};
-					else if(l == "(") return new Notation { Operator = OperatorType.OPENPAREN };
-					else if(l == ")") return new Notation { Operator = OperatorType.CLOSEPAREN };
-					else if(l == "+") return new Notation { Operator = OperatorType.ADD };
+					if (long.TryParse(l, out var num)) return new Notation { Value = num };
+					else if (l == "(") return new Notation { Operator = OperatorType.OPENPAREN };
+					else if (l == ")") return new Notation { Operator = OperatorType.CLOSEPAREN };
+					else if (l == "+") return new Notation { Operator = OperatorType.ADD };
 					else return new Notation { Operator = OperatorType.MULT };
 				})
-				.ToList();				
-				
+				.ToList();
+
 		ConvertSplits(splits, 0);
 	}
-	
+
+	public void InitializeAndConvertNewPemdas()
+	{
+		var splits =
+			_line
+				.Replace("(", " ( ")
+				.Replace(")", " ) ")
+				.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+				.Select(l =>
+				{
+					if (long.TryParse(l, out var num)) return new Notation { Value = num };
+					else if (l == "(") return new Notation { Operator = OperatorType.OPENPAREN };
+					else if (l == ")") return new Notation { Operator = OperatorType.CLOSEPAREN };
+					else if (l == "+") return new Notation { Operator = OperatorType.ADD };
+					else return new Notation { Operator = OperatorType.MULT };
+				})
+				.ToList();
+
+		var operatorStack = new Stack<Notation>();
+		
+		foreach(var note in splits)
+		{
+			switch(note.Operator){
+				case OperatorType.Number:
+					_notations.Add(note);
+					break;
+				case OperatorType.OPENPAREN:
+					operatorStack.Push(note);
+					break;
+				case OperatorType.CLOSEPAREN:
+					{
+						var temp = operatorStack.Pop();
+						while(temp.Operator != OperatorType.OPENPAREN){
+							_notations.Add(temp);
+							temp = operatorStack.Pop();
+						}
+					}
+					break;
+				case OperatorType.ADD:
+					if (operatorStack.Count() > 0 &&
+							 operatorStack.Peek().Operator == OperatorType.ADD)
+					{
+						_notations.Add(operatorStack.Pop());
+					}
+					operatorStack.Push(note);
+					break;
+				case OperatorType.MULT:
+					if(operatorStack.Count() > 0 && 
+						(operatorStack.Peek().Operator == OperatorType.MULT ||
+						 operatorStack.Peek().Operator == OperatorType.ADD))
+					{
+						_notations.Add(operatorStack.Pop());
+					}
+					operatorStack.Push(note);
+					break;
+			}
+		}
+		
+		while(operatorStack.Count() > 0) _notations.Add(operatorStack.Pop());
+	}
+
 	private int ConvertSplits(List<Notation> splits, int idx)
 	{
 		while (idx < splits.Count()){
@@ -131,9 +201,9 @@ class PolishNotation
 	
 	public static long Solve(string line, bool debug = false)
 	{
-		var stack = new Stack<string>();
-		
 		var pn = new PolishNotation(line);
+		
+		pn.Initialize();
 		
 		if(debug) pn._notations.Dump();
 		
@@ -144,4 +214,22 @@ class PolishNotation
 	{
 		return lines.Sum(l => Solve(l));
 	}
+
+	public static long SolveWPresidence(string[] lines)
+	{
+		return lines.Sum(l => SolveWPresidence(l));
+	}
+
+	internal static long SolveWPresidence(string line, bool debug = false)
+	{
+		var pn = new PolishNotation(line);
+		
+		pn.InitializeAndConvertNewPemdas();
+
+		if (debug) pn._notations.Dump();
+
+		return pn.Solve();
+	}
+
+	
 }
