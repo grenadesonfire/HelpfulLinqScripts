@@ -16,13 +16,25 @@ void Main()
 	var user = @"draconick";
 	var pass = @"4KhfUPy@uFRFsm2";
 	
-	var decks = Forge.ConvertDirectory(deckRepository);
+	var decks = Forge.ConvertDirectory(deckRepository).ToList();
 	
-	//RunStats(decks);
+	var scryfall = new ScryFallApi();
 	
-	var deckStats = new Deckstats(user, pass);
+	scryfall.GetTokens(decks);
 	
-	deckStats.UploadDecks(decks);
+	//RunStats(decks, "Crystalline Giant", true);
+	
+	//decks.SelectMany(d => d.MainDeck).Select(d => d.Name).OrderBy(d => d).Dump();
+	
+	//var deckStats = new Deckstats(user, pass);
+	//
+	//deckStats.UploadDecks(decks);
+	
+	//var moxField = new MoxField("draconick", "QSh6GYDNEmZz9dWoCpLP");
+	//
+	//moxField.UploadDecks(decks);
+	
+	//moxField.GetTokens();
 	
 	//Cockatrice.Convert(decks, @"C:\Users\Nick\AppData\Local\Cockatrice\Cockatrice\decks");
 }
@@ -32,7 +44,7 @@ IEnumerable<CommanderDeck> DecksThatRun(List<CommanderDeck> decks, string card)
 	return decks.Where(d => d.Commanders.Any(c => c.Name.Contains(card)) || d.MainDeck.Any(c => c.Name.Contains(card)));
 }
 
-void RunStats(List<CommanderDeck> decks)
+void RunStats(List<CommanderDeck> decks, string specific = null, bool onlySearch = false)
 {
 	var maindecks = decks
 		.SelectMany(d => d.MainDeck)
@@ -55,17 +67,197 @@ void RunStats(List<CommanderDeck> decks)
 
 
 	stats.Count().Dump("Unique cards");
+	if (!onlySearch)
+	{
+		stats.OrderByDescending(s => s.Total).Take(25).Dump("Top 25 most played cards");
+
+		stats
+			.OrderByDescending(s => s.Total)
+			.Where(s => !s.CardName.Contains("Forest"))
+			.Where(s => !s.CardName.Contains("Island"))
+			.Where(s => !s.CardName.Contains("Swamp"))
+			.Where(s => !s.CardName.Contains("Plains"))
+			.Where(s => !s.CardName.Contains("Mountain"))
+			.Take(25).Dump("Top 25 most played minus basic lands");
+	}
+		
+	if(specific != null)
+	{
+		stats
+			.Where(s => s.CardName == specific)
+			.Select(s =>
+				new
+				{
+					Decks = decks.Where(d => d.MainDeck.Any(md => md.Name == specific)).Select(d => new { Name = d.Name, Count = d.MainDeck.Count(md => md.Name == specific)})
+				}
+			)
+			.Dump($"All decks with {specific}");
+			
+	}
+}
+
+public class MoxField
+{
+	ChromeDriver _driver;
+	string _username;
+	string _password;
+	WebDriverWait _wait;
 	
-	stats.OrderByDescending(s => s.Total).Take(25).Dump("Top 25 most played cards");
+	public MoxField(string user, string pass){
+		_username = user;
+		_password = pass;
+		
+		_driver = new OpenQA.Selenium.Chrome.ChromeDriver(@"D:\SeleniumDrivers");
+		_wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(60));
+	}
 	
-	stats
-		.OrderByDescending(s => s.Total)
-		.Where(s => !s.CardName.Contains("Forest"))
-		.Where(s => !s.CardName.Contains("Island"))
-		.Where(s => !s.CardName.Contains("Swamp"))
-		.Where(s => !s.CardName.Contains("Plains"))
-		.Where(s => !s.CardName.Contains("Mountain"))
-		.Take(25).Dump("Top 25 most played minus basic lands");
+	private IWebElement WaitForId(string id){
+		return _wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.Id(id)));
+	}
+	
+	private IWebElement WaitForClassName(string className) => _wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.ClassName(className)));
+	
+	private IWebElement WaitForName(string name) => _wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.Name(name)));
+	
+	private void CheckEnvironmentVariable()
+	{
+		if (!Environment.GetEnvironmentVariable("PATH").Contains("Chrome"))
+		{
+			Environment.SetEnvironmentVariable(
+				"PATH",
+				Environment.GetEnvironmentVariable("PATH") + ";" + @"C:\Users\Nick\.nuget\packages\Selenium.Chrome.WebDriver\83.0.0\driver");
+		}
+	}
+
+	private void Login()
+	{
+		_driver.Url = @"https://www.moxfield.com/account/signin";
+		_driver.Navigate();
+
+		var userElement = _wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.Id("username")));
+
+		userElement.SendKeys(_username);
+
+		var passwordElement = _wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.Id("password")));
+
+		passwordElement.SendKeys(_password);
+
+		var loginButton = _driver.FindElementByCssSelector("button.btn.btn-custom.btn-primary");
+
+		loginButton.Click();
+	}
+	
+	public void GetTokens()
+	{
+		try
+		{
+			Login();
+
+			Task.Delay(5000).GetAwaiter().GetResult();
+
+			_driver.Navigate().GoToUrl("https://moxfield.com/decks/personal");
+			WaitForId("maincontent");
+
+			var decksPresent = _driver.FindElementsByXPath("//tr/td/a").ToList();
+		}
+		catch(Exception ex)
+		{
+			_driver.Quit();
+			_driver.Dispose();
+		}
+	}
+
+	public void UploadDeckNoLogin(CommanderDeck deck)
+	{
+		_wait.Until(
+			SeleniumExtras
+				.WaitHelpers
+				.ExpectedConditions
+				.ElementIsVisible(
+					By.XPath("//header/nav/div/form/div/button"))).Click();
+		
+		var name = WaitForId("name");
+		name.SendKeys(deck.Name);
+		
+		var cmdr = WaitForId("commander");
+		cmdr.SendKeys(deck.Commanders[0].Name);
+		name.Click();
+		
+		if(deck.Commanders.Count() > 1){
+			var prtnr = WaitForId("partner");
+			prtnr.SendKeys(deck.Commanders[1].Name);
+			name.Click();
+		}
+		
+		var privateRadio = WaitForId("visibility-private");
+		privateRadio.Click();
+		
+		var pastList = WaitForId("decklist-paste");
+		pastList.Click();
+		
+		var deckList = WaitForName("importText");
+		deckList.SendKeys(string.Join('\n', deck.MainDeck.Select(md => md.Name)));
+		
+		var submit = _wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(By.XPath("//div[@class = 'modal-footer']/button/span")));
+		
+		submit.Click();
+		WaitForName("deckview");
+		
+		_driver.Url = "https://moxfield.com";
+		_driver.Navigate();
+		
+		Console.ReadLine();
+	}
+
+	public void UploadDecks(List<CommanderDeck> decks)
+	{
+		try
+		{
+			Login();
+			
+			Task.Delay(5000).GetAwaiter().GetResult();
+			
+			_driver.Navigate().GoToUrl("https://moxfield.com/decks/personal");
+			WaitForId("maincontent");
+			
+			var map = MapExistingDecks(decks);
+			
+			var decksPresent = _driver.FindElementsByXPath("//tr/td/a").Select(md => md.Text).ToList();
+			
+			foreach (var deck in decks.Where(d => !decksPresent.Any(p => p.Trim() == d.Name)))
+			{
+				try
+				{
+					UploadDeckNoLogin(deck);
+				}
+				catch (Exception ex)
+				{
+					ex.Dump(deck.Name);
+				}
+			}
+		}
+		catch (Exception ex)
+		{
+			ex.Dump("Line 121");
+		}
+		finally
+		{
+			_driver.Quit();
+			_driver.Dispose();
+		}
+	}
+
+	private DeckMap MapExistingDecks(List<CommanderDeck> decks)
+	{
+		var file = "moxfield.json";
+		var map = new DeckMap();
+		if(File.Exists(file)){
+			map = System.Text.Json.JsonSerializer.Deserialize<DeckMap>(File.ReadAllText(file));
+		}
+		
+		//foreach(var deck in 
+		return null;
+	}
 }
 
 public class Deckstats
@@ -93,21 +285,21 @@ public class Deckstats
 		try
 		{
 			Login();
-
-			foreach (var deck in decks.Take(2))
+			
+			foreach (var deck in decks)
 			{
 				try
 				{
 					UploadDeckNoLogin(deck);
 				}catch(Exception ex)
 				{
-					ex.Dump();
+					ex.Dump(deck.Name);
 				}
 			}
 		}
 		catch(Exception ex)
 		{
-			ex.Dump("Line 100");
+			ex.Dump("Deckstats.UploadDecks -> Line 170");
 		}
 		finally
 		{
@@ -212,6 +404,183 @@ public class Deckstats
 	}
 }
 
+public class ScryFallApi {
+	private Root[] _db;
+	public ScryFallApi(string databaseJson = @"C:\Users\Nick\Downloads\oracle-cards-20211024090357.json")
+	{
+		var sw = new System.Diagnostics.Stopwatch();
+		sw.Start();
+		_db = System.Text.Json.JsonSerializer.Deserialize<Root[]>(File.ReadAllText(databaseJson));
+		sw.Stop();
+		
+		sw.Elapsed.Dump("Load time");
+	}
+
+	internal void GetTokens(List<CommanderDeck> decks)
+	{
+		var tokensDict = new Dictionary<string,int>();
+		foreach(var deck in decks)
+		{
+			var res = GetTokens(deck);
+			foreach(var token in res)
+			{
+				if (tokensDict.ContainsKey(token)) tokensDict[token]++;
+				else tokensDict.Add(token, 1);
+			}
+		}
+		
+		tokensDict.Dump("Totals");
+	}
+	
+	internal List<string> GetTokens(CommanderDeck deck)
+	{
+		var tokenDict = new Dictionary<string, int>();
+		foreach(var card in deck.MainDeck)
+		{
+			var refCard = _db.FirstOrDefault(x => x.name == card.Name || (x.name.Contains("//") && x.name.Contains(card.Name)));
+			if (refCard == null) { "Oops".Dump(card.Name); continue; }
+			var tokens = refCard.all_parts?.Where(a => a.component == "token");
+			
+			if(tokens != null && tokens.Count() > 0){
+				var tokenAdds = tokens.Select(t => t.name);
+				
+				foreach(var ta in tokenAdds){
+					if(tokenDict.ContainsKey(ta)) tokenDict[ta]++;
+					else tokenDict.Add(ta, 1);
+				}
+			}
+		}
+		return tokenDict.Keys.ToList();
+	}
+
+	#region Helper_Classes
+	// Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse); 
+	public class ImageUris
+	{
+		public string small { get; set; }
+		public string normal { get; set; }
+		public string large { get; set; }
+		public string png { get; set; }
+		public string art_crop { get; set; }
+		public string border_crop { get; set; }
+	}
+
+	public class AllPart
+	{
+		public string @object { get; set; }
+		public string id { get; set; }
+		public string component { get; set; }
+		public string name { get; set; }
+		public string type_line { get; set; }
+		public string uri { get; set; }
+	}
+
+	public class Legalities
+	{
+		public string standard { get; set; }
+		public string future { get; set; }
+		public string historic { get; set; }
+		public string gladiator { get; set; }
+		public string pioneer { get; set; }
+		public string modern { get; set; }
+		public string legacy { get; set; }
+		public string pauper { get; set; }
+		public string vintage { get; set; }
+		public string penny { get; set; }
+		public string commander { get; set; }
+		public string brawl { get; set; }
+		public string historicbrawl { get; set; }
+		public string paupercommander { get; set; }
+		public string duel { get; set; }
+		public string oldschool { get; set; }
+		public string premodern { get; set; }
+	}
+
+	public class Prices
+	{
+		public string usd { get; set; }
+		public object usd_foil { get; set; }
+		public object usd_etched { get; set; }
+		public string eur { get; set; }
+		public object eur_foil { get; set; }
+		public string tix { get; set; }
+	}
+
+	public class RelatedUris
+	{
+		public string gatherer { get; set; }
+		public string tcgplayer_infinite_articles { get; set; }
+		public string tcgplayer_infinite_decks { get; set; }
+		public string edhrec { get; set; }
+		public string mtgtop8 { get; set; }
+	}
+
+	public class Root
+	{
+		public string @object { get; set; }
+		public string id { get; set; }
+		public string oracle_id { get; set; }
+		public List<int> multiverse_ids { get; set; }
+		public int mtgo_id { get; set; }
+		public int tcgplayer_id { get; set; }
+		public int cardmarket_id { get; set; }
+		public string name { get; set; }
+		public string lang { get; set; }
+		public string released_at { get; set; }
+		public string uri { get; set; }
+		public string scryfall_uri { get; set; }
+		public string layout { get; set; }
+		public bool highres_image { get; set; }
+		public string image_status { get; set; }
+		public ImageUris image_uris { get; set; }
+		public string mana_cost { get; set; }
+		public double cmc { get; set; }
+		public string type_line { get; set; }
+		public string oracle_text { get; set; }
+		public string power { get; set; }
+		public string toughness { get; set; }
+		public List<string> colors { get; set; }
+		public List<string> color_identity { get; set; }
+		public List<string> keywords { get; set; }
+		public List<AllPart> all_parts { get; set; }
+		public Legalities legalities { get; set; }
+		public List<string> games { get; set; }
+		public bool reserved { get; set; }
+		public bool foil { get; set; }
+		public bool nonfoil { get; set; }
+		public List<string> finishes { get; set; }
+		public bool oversized { get; set; }
+		public bool promo { get; set; }
+		public bool reprint { get; set; }
+		public bool variation { get; set; }
+		//public string set_id { get; set; }
+		//public string set { get; set; }
+		//public string set_name { get; set; }
+		//public string set_type { get; set; }
+		//public string set_uri { get; set; }
+		//public string set_search_uri { get; set; }
+		public string scryfall_set_uri { get; set; }
+		public string rulings_uri { get; set; }
+		public string prints_search_uri { get; set; }
+		public string collector_number { get; set; }
+		public bool digital { get; set; }
+		public string rarity { get; set; }
+		public string card_back_id { get; set; }
+		public string artist { get; set; }
+		public List<string> artist_ids { get; set; }
+		public string illustration_id { get; set; }
+		public string border_color { get; set; }
+		public string frame { get; set; }
+		public bool full_art { get; set; }
+		public bool textless { get; set; }
+		public bool booster { get; set; }
+		public bool story_spotlight { get; set; }
+		public int edhrec_rank { get; set; }
+		public Prices prices { get; set; }
+		public RelatedUris related_uris { get; set; }
+	}
+	#endregion
+}
 // Define other methods, classes and namespaces here
 public class Forge
 {
@@ -368,4 +737,12 @@ public class CardEntry
 {
 	public string Name { get; set; }
 	public int Count { get; set; }
+}
+
+public class DeckMap {
+	public Dictionary<string, string> Decks;
+	
+	public DeckMap() {
+		Decks = new Dictionary<string, string>();
+	}
 }

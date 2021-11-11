@@ -1,61 +1,159 @@
 <Query Kind="Program">
   <Namespace>System.Drawing</Namespace>
-  <Namespace>System.Text.Json</Namespace>
   <Namespace>System.Security.Cryptography</Namespace>
+  <Namespace>System.Text.Json</Namespace>
   <Namespace>System.Threading.Tasks</Namespace>
+  <Namespace>System.Windows.Controls</Namespace>
 </Query>
 
 void Main()
 {
-	var dir = @"C:\Media\Xpray\Characters\Aurenn Volley Ball";
-	var outputDir = @"C:\Media\Creations";
+	var collisions = CreateMatrix(Path.Combine(@"D:\Media\Furry\Xpray\Months_Unpacked\October 2021 - Royal Tier\Kha'Zana 2021\Alts", "Pieces"));
+	var dir = @"D:\Media\Furry\Creations\Alts_35";
 	
-	var dirPath = new DirectoryInfo(dir).GetDirectories().First(n => n.Name.Contains("Alt")).FullName;
-	var basePhoto = new DirectoryInfo(dir).GetFiles().First(n => n.Name.Contains("High")).FullName;
+	var grid = new Grid();
+	grid.ColumnDefinitions.Add(new ColumnDefinition());
+	grid.ColumnDefinitions.Add(new ColumnDefinition());grid.ColumnDefinitions.Add(new ColumnDefinition());grid.ColumnDefinitions.Add(new ColumnDefinition());grid.ColumnDefinitions.Add(new ColumnDefinition());
+	//grid.ColumnDefinitions.Add(new ColumnDefinition() { MaxWidth = 250 });
+	//grid.ColumnDefinitions.Add(new ColumnDefinition() { MaxWidth = 250 });
+	//grid.ColumnDefinitions.Add(new ColumnDefinition() { MaxWidth = 250 });
+	//grid.ColumnDefinitions.Add(new ColumnDefinition() { MaxWidth = 250 });
 	
+	var sv = new ScrollViewer();
+	sv.Content = grid;
+	sv.ClipToBounds = true;
+	sv.MaxHeight = 800;
+	
+	var cbs = new List<CheckBox>();
+
+	foreach (var piece in collisions.Select((c, idx) => new { Collision = c, Idx = idx }))
+	{
+		if(piece.Idx%4 == 0) grid.RowDefinitions.Add(new RowDefinition());
+		var gb = new GroupBox { Header = $"{new FileInfo(piece.Collision.FileName).Name}"};
+		Grid.SetColumn(gb, 1+piece.Idx%4);
+		Grid.SetRow(gb, piece.Idx/4);
+		
+		var minipanel = new Grid();
+		minipanel.ColumnDefinitions.Add(new ColumnDefinition() { MaxWidth = 15 });
+		minipanel.ColumnDefinitions.Add(new ColumnDefinition());
+		
+		var image = new System.Windows.Controls.Image();
+		image.MaxHeight = 100;
+		image.MaxWidth = 100;
+		image.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(piece.Collision.FileName));
+		Grid.SetColumn(image, 1);
+		minipanel.Children.Add(image);
+		
+		var cb = new CheckBox();
+		Grid.SetColumn(cb, 0);
+		cbs.Add(cb);
+		minipanel.Children.Add(cb);
+		
+		gb.Content = minipanel;
+		
+		grid.Children.Add(gb);
+		//grid.Children.Add(new GroupBox { Header = $"Piece {new FileInfo(piece.FileName).Name}"});	
+	}
+
+	var mainImage = new System.Windows.Controls.Image();
+	mainImage.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(@"D:\Media\Furry\Creations\Alts_35\00000000000000000000000000000001.png"));
+	mainImage.MaxHeight = 750;
+	Grid.SetColumn(mainImage, 0);
+	Grid.SetRow(mainImage, 1);
+	Grid.SetRowSpan(mainImage, collisions.Count()/2 - 1);
+	grid.Children.Add(mainImage);
+	
+	var label = new System.Windows.Controls.Label() {
+		Content = "Nothing yet!"
+	};
+	Grid.SetColumn(label, 0);
+	Grid.SetRow(label, 0);
+	grid.Children.Add(label);
+	PanelManager.StackWpfElement(sv, "Picture Manipulator");
+
+	foreach(var cb in cbs.Select((c, idx) => new { c, idx }))
+	{
+		cb.c.Click += (o, e) =>
+		{
+			var sb = new List<string>();
+			foreach(var cvalue in cbs)
+			{
+				sb.Add(cvalue.IsChecked == true ? "1" : "0");
+			}
+			//sb.Reverse();
+			var fname = string.Join("", sb);
+			label.Content = $"Clicked {string.Join("", sb)}";
+			var fpath = Path.Combine(dir, fname+".png");
+			if(File.Exists(fpath)){
+				mainImage.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(fpath));
+			}
+			else{
+				label.Content = "Invalid!";
+			}
+		};
+	}
+
+	//
+	//"Test".Dump();
+	//MakeDiffs(
+	//	@"D:\Media\Furry\Xpray\Months_Unpacked\October 2021 - Royal Tier\Kha'Zana 2021\Alts",
+	//	@"D:\Media\Furry\Xpray\Months_Unpacked\October 2021 - Royal Tier\Kha'Zana 2021\xpr_khazana2021_color (High-Res).jpg");
+}
+
+void MakeDiffs(string dirPath, string basePhoto)
+{
+	var dir = @"D:\Media\Furry\Xpray\Characters\Aurenn Buns\Transparent";
+	var outputDir = @"D:\Media\Furry\Creations";
+
+	//var dirPath = @"D:\Media\Furry\Xpray\Characters\Mayternity Dragoness\Alts";
+	//var basePhoto = @"D:\Media\Furry\Xpray\Characters\Mayternity Dragoness\xpr_pregnantdragoness_color (High-Res).jpg";
+
 	var dirInfo = new DirectoryInfo(dirPath);
-	
-	var bitMaps = dirInfo.GetFiles().ToList(); 
+
+	var bitMaps = dirInfo.GetFiles().ToList();
 	var stopWatch = new Stopwatch();
 
 	stopWatch.Start();
 	DiffAll(basePhoto, bitMaps);
 	stopWatch.Stop();
 	stopWatch.Elapsed.Dump("Created Pieces.");
-	
+
 	"Pause to verify pieces".Dump();
 	Console.ReadLine();
-	
+
 	stopWatch.Reset();
 	stopWatch.Start();
-	CreateMatrix(Path.Combine(dirPath,"Pieces")).Dump();
+	CreateMatrix(Path.Combine(dirPath, "Pieces")).Dump();
 	stopWatch.Stop();
 	stopWatch.Elapsed.Dump("Created json for differences");
 
 	stopWatch.Reset();
 	stopWatch.Start();
-	CalculatePermutations(Path.Combine(dirPath,"Pieces", "Pieces.json")).Dump();
+	CalculatePermutations(Path.Combine(dirPath, "Pieces", "Pieces.json")).Dump();
 	stopWatch.Stop();
 	stopWatch.Elapsed.Dump("Calculated perumation ceiling.");
+//
+	var dirs = new DirectoryInfo(outputDir);
 
-	outputDir = $@"{outputDir}\Alts_{new DirectoryInfo(outputDir).GetDirectories().Count()}";
+	//outputDir = $@"{outputDir}\Alts_{dirs.GetDirectories().ToList().Where(d => d.Name.Contains("Alts_")).Select(d => int.Parse(d.Name.Split("Alts_")[1])).Max() + 1}";
+	outputDir = $@"{outputDir}\Alts_35";
 	Directory.CreateDirectory(outputDir);
-	
+
 	stopWatch.Reset();
 	stopWatch.Start();
 	ExecutePermutations(
-		Path.Combine(dirPath,"Pieces", "Pieces.json"), 
-		basePhoto, 
-		outputDir, 
-		new DirectoryInfo(Path.Combine(dirPath,"Pieces"))
+		Path.Combine(dirPath, "Pieces", "Pieces.json"),
+		basePhoto,
+		outputDir,
+		new DirectoryInfo(Path.Combine(dirPath, "Pieces"))
 			.GetFiles()
 			.Where(n => n.Name.Contains(".png"))
 			.Select(n => n.FullName)
-			.ToArray(), 
-		48);
+			.ToArray(),
+		12);
 	stopWatch.Stop();
 	stopWatch.Elapsed.Dump("Finished generating files");
-	
+
 	stopWatch.Reset();
 	stopWatch.Start();
 	VerifyDistinct(outputDir);
@@ -415,6 +513,13 @@ void Combine(string basePhoto, string piecesPath, int[] selectedParts, string ou
 
 void CombineDirect(string basePhoto, string[] selectedParts, string outDir, string fileName = "")
 {
+	if (!string.IsNullOrWhiteSpace(fileName) && File.Exists(Path.Combine(
+				outDir,
+					fileName)))
+	{
+		return;
+	}
+	
 	using (var baseBmp = new Bitmap(basePhoto))
 	{
 		for (int part = 0; part < selectedParts.Length; part++)
@@ -464,6 +569,12 @@ void DiffAll(string basePath, IEnumerable<FileInfo> fpaths, int groupThreshHold 
 
 List<CollisionMap> CreateMatrix(string dirPath)
 {
+	var path = Path.Combine(dirPath, "Pieces.json");
+	
+	if(File.Exists(path)){
+		return System.Text.Json.JsonSerializer.Deserialize<List<CollisionMap>>(File.ReadAllText(path));
+	}
+	
 	var collisions = new Dictionary<string,bool[]>();
 	var maps = new List<CollisionMap>();
 	
@@ -490,7 +601,7 @@ List<CollisionMap> CreateMatrix(string dirPath)
 	}
 	
 	File.WriteAllText(
-		Path.Combine(dirPath, "Pieces.json"),
+		path,
 		System.Text.Json.JsonSerializer.Serialize(
 			maps,
 			new JsonSerializerOptions
