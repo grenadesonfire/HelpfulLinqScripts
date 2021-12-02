@@ -429,7 +429,7 @@ public class ScryFallApi {
 			}
 		}
 		
-		tokensDict.Dump("Totals");
+		tokensDict.ToList().OrderBy(d => d.Key).Dump("Totals");
 	}
 	
 	internal List<string> GetTokens(CommanderDeck deck)

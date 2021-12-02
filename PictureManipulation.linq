@@ -8,90 +8,11 @@
 
 void Main()
 {
-	var collisions = CreateMatrix(Path.Combine(@"D:\Media\Furry\Xpray\Months_Unpacked\October 2021 - Royal Tier\Kha'Zana 2021\Alts", "Pieces"));
-	var dir = @"D:\Media\Furry\Creations\Alts_35";
+	var piecesDir = @"D:\Media\Furry\Xpray\Characters\Poledancing Wennie 2021\Alts\Pieces";
+	var basePhoto = @"D:\Media\Furry\Xpray\Characters\Poledancing Wennie 2021\xpr_poledancingwennie2021_color (High-Res).jpg";
+	var dir = @"D:\Media\Furry\Creations\Alts_36";
 	
-	var grid = new Grid();
-	grid.ColumnDefinitions.Add(new ColumnDefinition());
-	grid.ColumnDefinitions.Add(new ColumnDefinition());grid.ColumnDefinitions.Add(new ColumnDefinition());grid.ColumnDefinitions.Add(new ColumnDefinition());grid.ColumnDefinitions.Add(new ColumnDefinition());
-	//grid.ColumnDefinitions.Add(new ColumnDefinition() { MaxWidth = 250 });
-	//grid.ColumnDefinitions.Add(new ColumnDefinition() { MaxWidth = 250 });
-	//grid.ColumnDefinitions.Add(new ColumnDefinition() { MaxWidth = 250 });
-	//grid.ColumnDefinitions.Add(new ColumnDefinition() { MaxWidth = 250 });
-	
-	var sv = new ScrollViewer();
-	sv.Content = grid;
-	sv.ClipToBounds = true;
-	sv.MaxHeight = 800;
-	
-	var cbs = new List<CheckBox>();
-
-	foreach (var piece in collisions.Select((c, idx) => new { Collision = c, Idx = idx }))
-	{
-		if(piece.Idx%4 == 0) grid.RowDefinitions.Add(new RowDefinition());
-		var gb = new GroupBox { Header = $"{new FileInfo(piece.Collision.FileName).Name}"};
-		Grid.SetColumn(gb, 1+piece.Idx%4);
-		Grid.SetRow(gb, piece.Idx/4);
-		
-		var minipanel = new Grid();
-		minipanel.ColumnDefinitions.Add(new ColumnDefinition() { MaxWidth = 15 });
-		minipanel.ColumnDefinitions.Add(new ColumnDefinition());
-		
-		var image = new System.Windows.Controls.Image();
-		image.MaxHeight = 100;
-		image.MaxWidth = 100;
-		image.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(piece.Collision.FileName));
-		Grid.SetColumn(image, 1);
-		minipanel.Children.Add(image);
-		
-		var cb = new CheckBox();
-		Grid.SetColumn(cb, 0);
-		cbs.Add(cb);
-		minipanel.Children.Add(cb);
-		
-		gb.Content = minipanel;
-		
-		grid.Children.Add(gb);
-		//grid.Children.Add(new GroupBox { Header = $"Piece {new FileInfo(piece.FileName).Name}"});	
-	}
-
-	var mainImage = new System.Windows.Controls.Image();
-	mainImage.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(@"D:\Media\Furry\Creations\Alts_35\00000000000000000000000000000001.png"));
-	mainImage.MaxHeight = 750;
-	Grid.SetColumn(mainImage, 0);
-	Grid.SetRow(mainImage, 1);
-	Grid.SetRowSpan(mainImage, collisions.Count()/2 - 1);
-	grid.Children.Add(mainImage);
-	
-	var label = new System.Windows.Controls.Label() {
-		Content = "Nothing yet!"
-	};
-	Grid.SetColumn(label, 0);
-	Grid.SetRow(label, 0);
-	grid.Children.Add(label);
-	PanelManager.StackWpfElement(sv, "Picture Manipulator");
-
-	foreach(var cb in cbs.Select((c, idx) => new { c, idx }))
-	{
-		cb.c.Click += (o, e) =>
-		{
-			var sb = new List<string>();
-			foreach(var cvalue in cbs)
-			{
-				sb.Add(cvalue.IsChecked == true ? "1" : "0");
-			}
-			//sb.Reverse();
-			var fname = string.Join("", sb);
-			label.Content = $"Clicked {string.Join("", sb)}";
-			var fpath = Path.Combine(dir, fname+".png");
-			if(File.Exists(fpath)){
-				mainImage.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(fpath));
-			}
-			else{
-				label.Content = "Invalid!";
-			}
-		};
-	}
+	PictureEditorWindow(piecesDir, basePhoto, dir);
 
 	//
 	//"Test".Dump();
@@ -100,9 +21,23 @@ void Main()
 	//	@"D:\Media\Furry\Xpray\Months_Unpacked\October 2021 - Royal Tier\Kha'Zana 2021\xpr_khazana2021_color (High-Res).jpg");
 }
 
+bool ValidImage(List<CollisionMap> collisions, List<string> files)
+{
+	do
+	{
+		if (files.Count() > 1)
+		{
+			var map = collisions.FirstOrDefault(c => c.FileName == files.FirstOrDefault());
+			
+			if(map.Collisions.Contains(files.Skip(1).FirstOrDefault())) return false;
+		}
+		files = files.Skip(1).ToList();
+	}while(files.Count() > 0);
+	return true;
+}
+
 void MakeDiffs(string dirPath, string basePhoto)
 {
-	var dir = @"D:\Media\Furry\Xpray\Characters\Aurenn Buns\Transparent";
 	var outputDir = @"D:\Media\Furry\Creations";
 
 	//var dirPath = @"D:\Media\Furry\Xpray\Characters\Mayternity Dragoness\Alts";
@@ -837,6 +772,134 @@ void CompareMethods(string dir1, string dir2)
 
 		hashes.Where(h => !hashes2.Any(ha => ha.Hash == h.Hash)).Dump("Original Method:");
 		hashes2.Where(h => !hashes.Any(ha => ha.Hash == h.Hash)).Dump("New Method:");
+	}
+}
+
+void PictureEditorWindow(string piecesDir, string basePhoto, string dir)
+{
+	var collisions = CreateMatrix(Path.Combine(piecesDir));
+	var pieces = Directory.GetFiles(piecesDir, "*.png");
+
+	var grid = new Grid();
+	grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new System.Windows.GridLength(3, System.Windows.GridUnitType.Star) });
+	grid.ColumnDefinitions.Add(new ColumnDefinition()); grid.ColumnDefinitions.Add(new ColumnDefinition());
+	grid.ColumnDefinitions.Add(new ColumnDefinition()); grid.ColumnDefinitions.Add(new ColumnDefinition());
+
+	var sv = new ScrollViewer();
+	sv.Content = grid;
+	sv.MaxHeight = 900;
+	//sv.MaxHeight = 800;
+
+	var cbs = new List<CheckBox>();
+
+	foreach (var piece in collisions.Select((c, idx) => new { Collision = c, Idx = idx }))
+	{
+		if (piece.Idx % 4 == 0) grid.RowDefinitions.Add(new RowDefinition());
+		var gb = new GroupBox { Header = $"{new FileInfo(piece.Collision.FileName).Name}" };
+		Grid.SetColumn(gb, 1 + piece.Idx % 4);
+		Grid.SetRow(gb, piece.Idx / 4);
+
+		var minipanel = new Grid();
+		minipanel.ColumnDefinitions.Add(new ColumnDefinition() { MaxWidth = 15 });
+		minipanel.ColumnDefinitions.Add(new ColumnDefinition());
+
+		var image = new System.Windows.Controls.Image();
+		image.MaxHeight = 100;
+		image.MaxWidth = 100;
+		image.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(piece.Collision.FileName));
+		Grid.SetColumn(image, 1);
+		minipanel.Children.Add(image);
+
+		var cb = new CheckBox();
+		Grid.SetColumn(cb, 0);
+		cbs.Add(cb);
+		minipanel.Children.Add(cb);
+
+		gb.Content = minipanel;
+
+		grid.Children.Add(gb);
+	}
+
+	var mainImage = new System.Windows.Controls.Image();
+	Grid.SetColumn(mainImage, 0);
+	Grid.SetRow(mainImage, 1);
+	Grid.SetRowSpan(mainImage, collisions.Count() / 4 - 2);
+	grid.Children.Add(mainImage);
+
+	var label = new System.Windows.Controls.Label()
+	{
+		Content = "Nothing yet!"
+	};
+	Grid.SetColumn(label, 0);
+	Grid.SetRow(label, 0);
+	grid.Children.Add(label);
+
+	var saveButton = new Button() { Content = "Save" };
+	saveButton.Click += (o, e) =>
+	{
+		var diag = new System.Windows.Forms.SaveFileDialog();
+		var result = diag.ShowDialog();
+
+		if (result == System.Windows.Forms.DialogResult.OK || result == System.Windows.Forms.DialogResult.Yes)
+		{
+			File.Copy(
+				Path.Combine(dir, label.Content.ToString()),
+				diag.FileName,
+				true);
+		}
+	};
+
+	Grid.SetRow(saveButton, collisions.Count() / 4);
+	Grid.SetColumn(saveButton, 0);
+	grid.Children.Add(saveButton);
+
+	PanelManager.StackWpfElement(sv, "Picture Manipulator");
+
+	foreach (var cb in cbs.Select((c, idx) => new { c, idx }))
+	{
+		cb.c.Click += (o, e) =>
+		{
+			var sb = new List<string>();
+			var files = new List<string>();
+			foreach (var cvalue in cbs.Select((c, idx) => new { Index = idx, Checkbox = c }))
+			{
+				sb.Add(cvalue.Checkbox.IsChecked == true ? "1" : "0");
+				if (cvalue.Checkbox.IsChecked == true) files.Add(pieces[cvalue.Index]);
+			}
+			//sb.Reverse();
+			var fname = string.Join("", sb);
+			label.Content = $"{string.Join("", sb)}.png";
+			var fpath = Path.Combine(dir, fname + ".png");
+			if (File.Exists(fpath))
+			{
+				mainImage.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(fpath));
+			}
+			else if (ValidImage(collisions, files))
+			{
+				label.Content = "Generating...";
+				var task = new Task(() =>
+				{
+					CombineDirect(
+						basePhoto,
+						files.ToArray(),
+						dir,
+						fname + ".png");
+				});
+				var sw = new Stopwatch();
+				sw.Start();
+				task.Start();
+
+				while (!task.IsCompleted)
+				{
+					label.Content = $"Generating {sw.Elapsed}";
+					System.Threading.Thread.Sleep(500);
+				}
+			}
+			else
+			{
+				label.Content = "Invalid!";
+			}
+		};
 	}
 }
 // Define other methods and classes here
