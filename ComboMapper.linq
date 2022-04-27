@@ -23,16 +23,8 @@ State DrytronTest1_State()
 				Label = "Hand",
 				Cards = new List<Card>
 				{
-					new Card {
-						Name = "Drytron Alpha Thuban"
-					},
-					new Card {
-						Name = "Drytron Al-Zeta"
-					},
-					new Card {
-						Name = "Cyber Angel Benten"
-					},
-					new Card { Name = "Test" }, new Card { Name = "Test" }
+					new Card { Name = "Drytron Alpha Thuban" },
+					new Card { Name = "Drytron Al-Zeta" },
 				}
 			},
 			new Zone {
@@ -43,9 +35,8 @@ State DrytronTest1_State()
 				Label = "Deck",
 				Cards = new List<Card>
 				{
-					new Card {
-						Name = "Diviner of the Herald"
-					}
+					new Card { Name = "Diviner of the Herald" },
+					new Card { Name = "Cyber Angel Benten" },
 				}
 			},
 			new Zone {
@@ -77,6 +68,46 @@ List<DeltaDescription> DrytronTest1_DeltaDescription()
 					CardName = "Cyber Angel Benten",
 					Start = "Hand",
 					End = "Graveyard"
+				}
+			}
+		},
+		new DeltaDescription
+		{
+			Deltas = new List<Delta>{
+				new Delta {
+					CardName = "Drytron Alpha Thuban",
+					Start = "Hand",
+					End = "Field"
+				},
+				new Delta {
+					CardName = "Drytron Al-Zeta",
+					Start = "Hand",
+					End = "Graveyard"
+				},
+				new Delta {
+					CardName = "Cyber Angel Benten",
+					Start = "Deck",
+					End = "Hand"
+				}
+			}
+		},
+		new DeltaDescription
+		{
+			Deltas = new List<Delta>{
+				new Delta {
+					CardName = "Drytron Al-Zeta",
+					Start = "Graveyard",
+					End = "Field"
+				},
+				new Delta {
+					CardName = "Cyber Angel Benten",
+					Start = "Hand",
+					End = "Graveyard"
+				},
+				new Delta {
+					CardName = "Diviner of the Herald",
+					Start = "Deck",
+					End = "Hand"
 				}
 			}
 		},
