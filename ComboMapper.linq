@@ -5,13 +5,45 @@ void Main()
 	var state = DrytronTest1_State();
 	var deltas = DrytronTest1_DeltaDescription();
 	
-	foreach(var d in deltas){
-		if(d.Valid(state))
+	var q = new Queue<PotentialMove>();
+	//Initial 
+	//Build
+	foreach (var d in deltas)
+	{
+		if (d.Valid(state))
 		{
-			var s2 = d.Execute(state);
-			s2.Dump("After execution");
+			q.Enqueue(
+				new PotentialMove
+				{
+					Move = d,
+					State = state.Copy(),
+				});
 		}
 	}
+	
+	do
+	{
+		var move = q.Dequeue();
+		
+		state = move.Move.Execute(move.State);
+
+		foreach (var d in deltas)
+		{
+			if (d.Valid(state))
+			{
+				q.Enqueue(
+					new PotentialMove
+					{
+						Move = d,
+						State = state.Copy(),
+					});
+			}
+		}
+		
+		state.Dump();
+	} while (q.Count() != 0);
+	
+	"Finished!".Dump();
 }
 
 State DrytronTest1_State()
@@ -114,15 +146,23 @@ List<DeltaDescription> DrytronTest1_DeltaDescription()
 	};
 }
 
+class PotentialMove{
+	public State State { get; set; }
+	public DeltaDescription Move { get; set; }
+}
+
 class State
 {
 	public List<Zone> Zones { get; set; }
+	
+	public List<DeltaDescription> History { get; set; } = new List<DeltaDescription>();
 
 	internal State Copy()
 	{
 		var s = new State();
 		s.Zones = new List<Zone>();
 		s.Zones.AddRange(Zones.Select(z => z.Copy()));
+		s.History.AddRange(History);
 		return s;
 	}
 }
@@ -157,7 +197,7 @@ class DeltaDescription
 			zStart.Cards.Remove(c);
 			zEnd.Cards.Add(c);
 		}
-		
+		s.History.Add(this);
 		return s;
 	}
 
