@@ -8,11 +8,13 @@
 
 void Main()
 {
-	var piecesDir = @"D:\Media\Furry\Xpray\Characters\Poledancing Wennie 2021\Alts\Pieces";
-	var basePhoto = @"D:\Media\Furry\Xpray\Characters\Poledancing Wennie 2021\xpr_poledancingwennie2021_color (High-Res).jpg";
-	var dir = @"D:\Media\Furry\Creations\Alts_36";
+	var piecesDir = @"D:\Media\Furry\Xpray\Characters\Muscular Dragoness\Alts";
+	var basePhoto = @"D:\Media\Furry\Xpray\Characters\Muscular Dragoness\xpr_muscledragoness_color (High-res).jpg";
+	var dir = @"D:\Media\Furry\Creations\Alts_38";
 	
-	PictureEditorWindow(piecesDir, basePhoto, dir);
+	MakeDiffs(piecesDir, basePhoto, skipPieces: false);
+	
+	//PictureEditorWindow(piecesDir, basePhoto, dir);
 
 	//
 	//"Test".Dump();
@@ -36,7 +38,7 @@ bool ValidImage(List<CollisionMap> collisions, List<string> files)
 	return true;
 }
 
-void MakeDiffs(string dirPath, string basePhoto)
+void MakeDiffs(string dirPath, string basePhoto, bool onlyGenerateFiles = true, bool skipPieces = true)
 {
 	var outputDir = @"D:\Media\Furry\Creations";
 
@@ -47,31 +49,36 @@ void MakeDiffs(string dirPath, string basePhoto)
 
 	var bitMaps = dirInfo.GetFiles().ToList();
 	var stopWatch = new Stopwatch();
+	if(!onlyGenerateFiles){
+		stopWatch.Start();
+		DiffAll(basePhoto, bitMaps);
+		stopWatch.Stop();
+		stopWatch.Elapsed.Dump("Created Pieces.");
 
-	stopWatch.Start();
-	DiffAll(basePhoto, bitMaps);
-	stopWatch.Stop();
-	stopWatch.Elapsed.Dump("Created Pieces.");
+		"Pause to verify pieces".Dump();
+		Console.ReadLine();
+	}
 
-	"Pause to verify pieces".Dump();
-	Console.ReadLine();
+	if (!skipPieces)
+	{
+		stopWatch.Reset();
+		stopWatch.Start();
+		CreateMatrix(Path.Combine(dirPath, "Pieces")).Dump();
+		stopWatch.Stop();
+		stopWatch.Elapsed.Dump("Created json for differences");
 
-	stopWatch.Reset();
-	stopWatch.Start();
-	CreateMatrix(Path.Combine(dirPath, "Pieces")).Dump();
-	stopWatch.Stop();
-	stopWatch.Elapsed.Dump("Created json for differences");
+		stopWatch.Reset();
+		stopWatch.Start();
+		CalculatePermutations(Path.Combine(dirPath, "Pieces", "Pieces.json")).Dump();
+		stopWatch.Stop();
+		stopWatch.Elapsed.Dump("Calculated perumation ceiling.");
+	}
 
-	stopWatch.Reset();
-	stopWatch.Start();
-	CalculatePermutations(Path.Combine(dirPath, "Pieces", "Pieces.json")).Dump();
-	stopWatch.Stop();
-	stopWatch.Elapsed.Dump("Calculated perumation ceiling.");
-//
+	//
 	var dirs = new DirectoryInfo(outputDir);
 
-	//outputDir = $@"{outputDir}\Alts_{dirs.GetDirectories().ToList().Where(d => d.Name.Contains("Alts_")).Select(d => int.Parse(d.Name.Split("Alts_")[1])).Max() + 1}";
-	outputDir = $@"{outputDir}\Alts_35";
+	outputDir = $@"{outputDir}\Alts_{dirs.GetDirectories().ToList().Where(d => d.Name.Contains("Alts_")).Select(d => int.Parse(d.Name.Split("Alts_")[1])).Max() + 1}";
+	//outputDir = $@"{outputDir}\Alts_35";
 	Directory.CreateDirectory(outputDir);
 
 	stopWatch.Reset();
@@ -777,7 +784,7 @@ void CompareMethods(string dir1, string dir2)
 
 void PictureEditorWindow(string piecesDir, string basePhoto, string dir)
 {
-	var collisions = CreateMatrix(Path.Combine(piecesDir));
+	var collisions = CreateMatrix(Path.Combine(piecesDir, "Pieces"));
 	var pieces = Directory.GetFiles(piecesDir, "*.png");
 
 	var grid = new Grid();
@@ -864,7 +871,12 @@ void PictureEditorWindow(string piecesDir, string basePhoto, string dir)
 			foreach (var cvalue in cbs.Select((c, idx) => new { Index = idx, Checkbox = c }))
 			{
 				sb.Add(cvalue.Checkbox.IsChecked == true ? "1" : "0");
-				if (cvalue.Checkbox.IsChecked == true) files.Add(pieces[cvalue.Index]);
+				try
+				{
+					if (cvalue.Checkbox.IsChecked == true) files.Add(pieces[cvalue.Index]);
+				}catch{
+					Console.WriteLine("oof");
+				}
 			}
 			//sb.Reverse();
 			var fname = string.Join("", sb);

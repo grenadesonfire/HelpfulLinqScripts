@@ -16,13 +16,13 @@ void Main()
 	var user = @"draconick";
 	var pass = @"4KhfUPy@uFRFsm2";
 	
-	var decks = Forge.ConvertDirectory(deckRepository).ToList();
-	
-	var scryfall = new ScryFallApi();
-	
-	scryfall.GetTokens(decks);
-	
-	//RunStats(decks, "Crystalline Giant", true);
+	//var decks = Forge.ConvertDirectory(deckRepository).ToList();
+	//
+	////var scryfall = new ScryFallApi();
+	//
+	////scryfall.GetTokens(decks);
+	//
+	//RunStats(decks, "Chromatic Lantern", true);
 	
 	//decks.SelectMany(d => d.MainDeck).Select(d => d.Name).OrderBy(d => d).Dump();
 	
@@ -37,6 +37,8 @@ void Main()
 	//moxField.GetTokens();
 	
 	//Cockatrice.Convert(decks, @"C:\Users\Nick\AppData\Local\Cockatrice\Cockatrice\decks");
+	
+	
 }
 
 IEnumerable<CommanderDeck> DecksThatRun(List<CommanderDeck> decks, string card)
