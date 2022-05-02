@@ -130,7 +130,7 @@ void DrytronTest()
 	CreateMap(state, deltas);
 }
 
-void CreateMap(State state, List<DeltaDescription> deltas)
+List<PotentialMove> CreateMap(State state, List<DeltaDescription> deltas)
 {
 	var q = new Queue<PotentialMove>();
 	var startingMoves = new List<PotentialMove>();
@@ -188,12 +188,17 @@ void CreateMap(State state, List<DeltaDescription> deltas)
 
 	if (startingMoves.Count() != 0)
 	{
-		startingMoves.Dump("Map");
+		return startingMoves;
 	}
-	else{
-		state.Dump("No Map");
+	else
+	{
+		return new List<PotentialMove>() {
+			new PotentialMove{
+				ChildMoves = null,
+				Move = null,
+				State = state
+			}};
 	}
-	"Finished!".Dump();
 }
 
 class PotentialMove
@@ -270,8 +275,19 @@ class DeltaDescription
 		{
 			var zStart = s.Zones.FirstOrDefault(z => z.Label == d.Start);
 			var zEnd = s.Zones.FirstOrDefault(z => z.Label == d.End);
+			Card c = null;
 			
-			var c = zStart.Cards.FirstOrDefault(ca => ca.Name == d.CardName);
+			if (d.Properties == null || d.Properties.Count() == 0)
+			{
+				c = zStart.Cards.FirstOrDefault(ca => ca.Name == d.CardName);
+			}
+			else
+			{
+				c = zStart.Cards.FirstOrDefault(ca => d.Properties.All(p => ca.Properties.Contains(p)));
+			}
+			
+			if(c == null) throw new Exception("oof no card, them properties though");
+
 			zStart.Cards.Remove(c);
 			zEnd.Cards.Add(c);
 		}
@@ -293,6 +309,7 @@ class DeltaDescription
 class Delta
 {
 	public string CardName { get; set; }
+	public List<string> Properties { get; set; }
 	public int Count { get; set; }
 	//Card to remove
 	public string Start { get; set; }
@@ -304,8 +321,10 @@ class Delta
 		var z = state.Zones.FirstOrDefault(z => Start == z.Label);
 		try
 		{
-			if (
-				z == null ||
+			if (Properties != null && z.Cards.Any(c => c.Properties.Count() != 0 && ValidProperties(c)))
+				return true;
+			else if (
+				z == null || 
 				(Count != 0 && z.Cards.Count(c => c.Name != CardName) == Count) ||
 				(Count == 0 && z.Cards.All(c => c.Name != CardName))) return false;
 
@@ -316,6 +335,12 @@ class Delta
 			Console.WriteLine($"Label: {z?.Label} CardName: {CardName}");
 			return false;
 		}
+	}
+
+	bool ValidProperties(Card c)
+	{
+		var ret = this.Properties.All(p => c.Properties.Contains(p));
+		return ret;
 	}
 }
 
@@ -328,6 +353,7 @@ class Delta
 class Card
 {
 	public string Name { get; set; }
+	public List<string> Properties { get; set; } = new List<string>();
 }
 
 

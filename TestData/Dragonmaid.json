@@ -88,19 +88,57 @@
 	{
 		"Deltas": [
 			{
-				"Property": [ "Dragon" ],
+				"CardName": "Hieratic Seal Of The Heavenly Spheres",
+				"Start": "ExtraDeck",
+				"End": "Field"
+			},
+			{
+				"CardName": "Nurse Dragonmaid",
 				"Start": "Field",
 				"End": "Graveyard"
 			},
 			{
-				"Property": [ "Dragon" ],
+				"CardName": "Chamber Dragonmaid",
 				"Start": "Field",
 				"End": "Graveyard"
-			},
+			}
+		]
+	},
+	{
+		"Deltas": [
 			{
 				"CardName": "Hieratic Seal Of The Heavenly Spheres",
 				"Start": "ExtraDeck",
 				"End": "Field"
+			},
+			{
+				"CardName": "Nurse Dragonmaid",
+				"Start": "Field",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Parlor Dragonmaid",
+				"Start": "Field",
+				"End": "Graveyard"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Hieratic Seal Of The Heavenly Spheres",
+				"Start": "ExtraDeck",
+				"End": "Field"
+			},
+			{
+				"CardName": "Parlor Dragonmaid",
+				"Start": "Field",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Chamber Dragonmaid",
+				"Start": "Field",
+				"End": "Graveyard"
 			}
 		]
 	}
