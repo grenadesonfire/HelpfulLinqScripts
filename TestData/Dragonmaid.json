@@ -1,0 +1,107 @@
+[
+	{
+		"Deltas": [
+			{
+				"CardName": "Gold Sarcophagus",
+				"Start": "Hand",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Tempest, Dragon Ruler Of Storms",
+				"Start": "Deck",
+				"End": "Banish"
+			},
+			{
+				"CardName": "Dragonmaid Hospitality",
+				"Start": "Deck",
+				"End": "Deck"
+			},
+			{
+				"CardName": "Parlor Dragonmaid",
+				"Start": "Deck",
+				"End": "Hand"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Dragonmaid Hospitality",
+				"Start": "Hand",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Parlor Dragonmaid",
+				"Start": "Hand",
+				"End": "Field"
+			},
+			{
+				"CardName": "Dragonmaid Lorpar",
+				"Start": "Deck",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Chamber Dragonmaid",
+				"Start": "Deck",
+				"End": "Graveyard"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Nurse Dragonmaid",
+				"Start": "Hand",
+				"End": "Field"
+			},
+			{
+				"CardName": "Chamber Dragonmaid",
+				"Start": "Graveyard",
+				"End": "Field"
+			},
+			{
+				"CardName": "Dragonmaid Changeover",
+				"Start": "Deck",
+				"End": "Hand"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Nurse Dragonmaid",
+				"Start": "Hand",
+				"End": "Field"
+			},
+			{
+				"CardName": "Chamber Dragonmaid",
+				"Start": "Graveyard",
+				"End": "Field"
+			},
+			{
+				"CardName": "Dragonmaid Tidying",
+				"Start": "Deck",
+				"End": "Hand"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"Property": [ "Dragon" ],
+				"Start": "Field",
+				"End": "Graveyard"
+			},
+			{
+				"Property": [ "Dragon" ],
+				"Start": "Field",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Hieratic Seal Of The Heavenly Spheres",
+				"Start": "ExtraDeck",
+				"End": "Field"
+			}
+		]
+	}
+]

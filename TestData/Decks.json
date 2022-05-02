@@ -1,0 +1,427 @@
+[
+	{
+		"Deckname": "Drytron",
+		"Zones": [
+			{
+				"Label": "Hand",
+				"Cards": []
+			},
+			{
+				"Label": "Deck",
+				"Cards": [
+					{
+						"Name": "Destiny HERO - Plasma"
+					},
+					{
+						"Name": "Artifact Scythe"
+					},
+					{
+						"Name": "Artifact Lancea"
+					},
+					{
+						"Name": "Destiny HERO - Celestial"
+					},
+					{
+						"Name": "Ash Blossom & Joyous Spring"
+					},
+					{
+						"Name": "Ash Blossom & Joyous Spring"
+					},
+					{
+						"Name": "Ash Blossom & Joyous Spring"
+					},
+					{
+						"Name": "Diviner of the Herald"
+					},
+					{
+						"Name": "Diviner of the Herald"
+					},
+					{
+						"Name": "Diviner of the Herald"
+					},
+					{
+						"Name": "Drytron Delta Altais"
+					},
+					{
+						"Name": "Drytron Delta Altais"
+					},
+					{
+						"Name": "Drytron Beta Rastaban"
+					},
+					{
+						"Name": "Drytron Gamma Eltanin"
+					},
+					{
+						"Name": "Drytron Gamma Eltanin"
+					},
+					{
+						"Name": "Drytron Gamma Eltanin"
+					},
+					{
+						"Name": "Drytron Zeta Aldhibah"
+					},
+					{
+						"Name": "Drytron Zeta Aldhibah"
+					},
+					{
+						"Name": "Drytron Zeta Aldhibah"
+					},
+					{
+						"Name": "Drytron Alpha Thuban"
+					},
+					{
+						"Name": "Drytron Alpha Thuban"
+					},
+					{
+						"Name": "Drytron Alpha Thuban"
+					},
+					{
+						"Name": "Drytron Meteonis Draconids"
+					},
+					{
+						"Name": "Megalith Bethor"
+					},
+					{
+						"Name": "Cyber Angel Benten"
+					},
+					{
+						"Name": "Cyber Angel Idaten"
+					},
+					{
+						"Name": "Cyber Angel Natasha"
+					},
+					{
+						"Name": "Megalith Ophiel"
+					},
+					{
+						"Name": "Megalith Phul"
+					},
+					{
+						"Name": "Megalith Phul"
+					},
+					{
+						"Name": "Harpie's Feather Duster"
+					},
+					{
+						"Name": "Fusion Destiny"
+					},
+					{
+						"Name": "Cyber Emergency"
+					},
+					{
+						"Name": "Cyber Emergency"
+					},
+					{
+						"Name": "Cyber Emergency"
+					},
+					{
+						"Name": "Foolish Burial"
+					},
+					{
+						"Name": "Drytron Nova"
+					},
+					{
+						"Name": "Drytron Nova"
+					},
+					{
+						"Name": "Preparation of Rites"
+					},
+					{
+						"Name": "Meteonis Drytron"
+					},
+					{
+						"Name": "Called by the Grave"
+					},
+					{
+						"Name": "Drytron Fafnir"
+					}
+				]
+			},
+			{
+				"Label": "Graveyard",
+				"Cards": []
+			},
+			{
+				"Label": "Banish",
+				"Cards": []
+			},
+			{
+				"Label": "Field",
+				"Cards": []
+			},
+			{
+				"Label": "XYZMats",
+				"Cards": []
+			},
+			{
+				"Label": "ExtraDeck",
+				"Cards": [
+					{
+						"Name": "Destiny HERO - Destroyer Phoenix Enforcer"
+					},
+					{
+						"Name": "Elder Entity N'tss"
+					},
+					{
+						"Name": "Herald of the Arc Light"
+					},
+					{
+						"Name": "Divine Arsenal AA-ZEUS - Sky Thunder"
+					},
+					{
+						"Name": "Beatrice, Lady of the Eternal"
+					},
+					{
+						"Name": "Downerd Magician"
+					},
+					{
+						"Name": "Drytron Mu Beta Fafnir"
+					},
+					{
+						"Name": "Drytron Mu Beta Fafnir"
+					},
+					{
+						"Name": "Accesscode Talker"
+					},
+					{
+						"Name": "Apollousa, Bow of the Goddess"
+					},
+					{
+						"Name": "Knightmare Unicorn"
+					},
+					{
+						"Name": "Artifact Dagda"
+					},
+					{
+						"Name": "I:P Masquerena"
+					},
+					{
+						"Name": "Predaplant Verte Anaconda"
+					},
+					{
+						"Name": "Linkuriboh"
+					}
+				]
+			},
+			{
+				"Label": "SideDeck",
+				"Cards": []
+			}
+		],
+		"History": []
+	},
+	{
+		"Deckname": "Dragonmaid",
+		"Zones": [
+			{
+				"Label": "Hand",
+				"Cards": []
+			},
+			{
+				"Label": "Deck",
+				"Cards": [
+					{
+						"Name": "Ash Blossom & Joyous Spring"
+					},
+					{
+						"Name": "Ash Blossom & Joyous Spring"
+					},
+					{
+						"Name": "Ash Blossom & Joyous Spring"
+					},
+					{
+						"Name": "Noctovision Dragon"
+					},
+					{
+						"Name": "Noctovision Dragon"
+					},
+					{
+						"Name": "Noctovision Dragon"
+					},
+					{
+						"Name": "Red-Eyes Darkness Metal Dragon"
+					},
+					{
+						"Name": "Black Metal Dragon"
+					},
+					{
+						"Name": "Black Metal Dragon"
+					},
+					{
+						"Name": "Black Metal Dragon"
+					},
+					{
+						"Name": "Fallen Of Albaz"
+					},
+					{
+						"Name": "Tempest, Dragon Ruler Of Storms"
+					},
+					{
+						"Name": "Dragonmaid Lorpar"
+					},
+					{
+						"Name": "Dragonmaid Tinkhec"
+					},
+					{
+						"Name": "Dragonmaid Ernus"
+					},
+					{
+						"Name": "Chamber Dragonmaid",
+						"Properties" : [ "Dragon" ]
+					},
+					{
+						"Name": "Chamber Dragonmaid",
+						"Properties" : [ "Dragon" ]
+					},
+					{
+						"Name": "Chamber Dragonmaid",
+						"Properties" : [ "Dragon" ]
+					},
+					{
+						"Name": "Parlor Dragonmaid",
+						"Properties" : [ "Dragon" ]
+					},
+					{
+						"Name": "Parlor Dragonmaid",
+						"Properties" : [ "Dragon" ]
+					},
+					{
+						"Name": "Parlor Dragonmaid",
+						"Properties" : [ "Dragon" ]
+					},
+					{
+						"Name": "Nurse Dragonmaid",
+						"Properties" : [ "Dragon" ]
+					},
+					{
+						"Name": "Dragon Ravine"
+					},
+					{
+						"Name": "Called By The Grave"
+					},
+					{
+						"Name": "Dragonmaid Hospitality"
+					},
+					{
+						"Name": "Dragonmaid Hospitality"
+					},
+					{
+						"Name": "Dragonmaid Hospitality"
+					},
+					{
+						"Name": "Raigeki"
+					},
+					{
+						"Name": "World Legacy Guardragon"
+					},
+					{
+						"Name": "World Legacy Guardragon"
+					},
+					{
+						"Name": "Monster Reborn"
+					},
+					{
+						"Name": "Dragonmaid Changeover"
+					},
+					{
+						"Name": "Gold Sarcophagus"
+					},
+					{
+						"Name": "Infinite Impermanence"
+					},
+					{
+						"Name": "Infinite Impermanence"
+					},
+					{
+						"Name": "Infinite Impermanence"
+					},
+					{
+						"Name": "Solemn Strike"
+					},
+					{
+						"Name": "Solemn Strike"
+					},
+					{
+						"Name": "Solemn Strike"
+					},
+					{
+						"Name": "Dragonmaid Tidying"
+					},
+					{
+						"Name": "Dragonmaid Tidying"
+					},
+					{
+						"Name": "Dragonmaid Tidying"
+					}
+				]
+			},
+			{
+				"Label": "Graveyard",
+				"Cards": []
+			},
+			{
+				"Label": "Banish",
+				"Cards": []
+			},
+			{
+				"Label": "Field",
+				"Cards": []
+			},
+			{
+				"Label": "ExtraDeck",
+				"Cards": [
+					{
+						"Name": "Guardragon Pisty"
+					},
+					{
+						"Name": "Striker Dragon"
+					},
+					{
+						"Name": "I:P Masquerena"
+					},
+					{
+						"Name": "Twin Triangle Dragon"
+					},
+					{
+						"Name": "Hieratic Seal Of The Heavenly Spheres"
+					},
+					{
+						"Name": "Hieratic Seal Of The Heavenly Spheres"
+					},
+					{
+						"Name": "Dragunity Knight - Romulus"
+					},
+					{
+						"Name": "Knightmare Phoenix"
+					},
+					{
+						"Name": "Knightmare Unicorn"
+					},
+					{
+						"Name": "Accesscode Talker"
+					},
+					{
+						"Name": "Titaniklad The Ash Dragon"
+					},
+					{
+						"Name": "House Dragonmaid"
+					},
+					{
+						"Name": "House Dragonmaid"
+					},
+					{
+						"Name": "Dragonmaid Sheou"
+					},
+					{
+						"Name": "Dragonmaid Sheou"
+					}
+				]
+			},
+			{
+				"Label": "SideDeckaDeck",
+				"Cards": []
+			}
+		],
+		"History": []
+	}
+]

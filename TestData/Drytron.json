@@ -1,0 +1,312 @@
+[
+	{
+		"Deltas": [
+			{
+				"CardName": "Foolish Burial",
+				"Start": "Hand",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Drytron Alpha Thuban",
+				"Start": "Deck",
+				"Count": 3,
+				"End": "Graveyard"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Drytron Alpha Thuban",
+				"Start": "Graveyard",
+				"End": "Field"
+			},
+			{
+				"CardName": "Drytron Gamma Eltanin",
+				"Start": "Hand",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Drytron Gamma Eltanin",
+				"Start": "Deck",
+				"Count": 2,
+				"End": "Deck"
+			},
+			{
+				"CardName": "Drytron Alpha Thuban",
+				"Start": "Deck",
+				"Count": 2,
+				"End": "Deck"
+			},
+			{
+				"CardName": "Cyber Angel Benten",
+				"Start": "Deck",
+				"End": "Hand"
+			}
+		]
+	},
+	{
+		"UniquePerTurn": true,
+		"Deltas": [
+			{
+				"CardName": "Drytron Gamma Eltanin",
+				"Start": "Graveyard",
+				"End": "Field"
+			},
+			{
+				"CardName": "Drytron Alpha Thuban",
+				"Start": "Field",
+				"End": "Field"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Drytron Zeta Aldhibah",
+				"Start": "Hand",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Drytron Alpha Thuban",
+				"Start": "Hand",
+				"End": "Field"
+			},
+			{
+				"CardName": "Cyber Angel Benten",
+				"Start": "Deck",
+				"End": "Hand"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Drytron Gamma Eltanin",
+				"Start": "Field",
+				"End": "XYZMats"
+			},
+			{
+				"CardName": "Drytron Alpha Thuban",
+				"Start": "Field",
+				"End": "XYZMats"
+			},
+			{
+				"CardName": "Drytron Mu Beta Fafnir",
+				"Start": "ExtraDeck",
+				"End": "Field"
+			},
+			{
+				"CardName": "Drytron Zeta Aldhibah",
+				"Start": "Deck",
+				"Count": 3,
+				"End": "Graveyard"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Drytron Zeta Aldhibah",
+				"Start": "Graveyard",
+				"End": "Field"
+			},
+			{
+				"CardName": "Cyber Angel Benten",
+				"Start": "Hand",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Diviner of the Herald",
+				"Start": "Deck",
+				"Count": 3,
+				"End": "Hand"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Diviner of the Herald",
+				"Start": "Hand",
+				"End": "Field"
+			},
+			{
+				"CardName": "Herald of the Arc Light",
+				"Start": "ExtraDeck",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Megalith Phul",
+				"Start": "Deck",
+				"Count": 2,
+				"End": "Hand"
+			},
+			{
+				"CardName": "Diviner of the Herald",
+				"Start": "Deck",
+				"Count": 2,
+				"End": "Deck"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Drytron Alpha Thuban",
+				"Start": "Deck",
+				"End": "Hand",
+				"Count": 3
+			},
+			{
+				"CardName": "Cyber Emergency",
+				"Start": "Hand",
+				"End": "Graveyard"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Drytron Nova",
+				"Start": "Hand",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Drytron Alpha Thuban",
+				"Count": 3,
+				"Start": "Deck",
+				"End": "Field"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Drytron Nova",
+				"Start": "Hand",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Drytron Al-Zeta",
+				"Count": 3,
+				"Start": "Deck",
+				"End": "Field"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Drytron Zeta Aldhibah",
+				"Start": "Hand",
+				"End": "Field"
+			},
+			{
+				"CardName": "Cyber Angel Benten",
+				"Start": "Hand",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Diviner of the Herald",
+				"Start": "Deck",
+				"End": "Hand"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Drytron Alpha Thuban",
+				"Start": "Hand",
+				"End": "Field"
+			},
+			{
+				"CardName": "Cyber Angel Benten",
+				"Start": "Deck",
+				"End": "Hand"
+			},
+			{
+				"CardName": "Drytron Al-Zeta",
+				"Start": "Field",
+				"End": "Graveyard"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Drytron Alpha Thuban",
+				"Start": "Hand",
+				"End": "Field"
+			},
+			{
+				"CardName": "Diviner of the Herald",
+				"Start": "Deck",
+				"End": "Hand"
+			},
+			{
+				"CardName": "Cyber Angel Benten",
+				"Start": "Hand",
+				"End": "Graveyard"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Drytron Alpha Thuban",
+				"Start": "Hand",
+				"End": "Field"
+			},
+			{
+				"CardName": "Drytron Al-Zeta",
+				"Start": "Hand",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Cyber Angel Benten",
+				"Start": "Deck",
+				"End": "Hand"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Drytron Alpha Thuban",
+				"Start": "Hand",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Drytron Al-Zeta",
+				"Start": "Hand",
+				"End": "Field"
+			},
+			{
+				"CardName": "Meteonis Drytron",
+				"Start": "Deck",
+				"End": "Hand"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Drytron Al-Zeta",
+				"Start": "Graveyard",
+				"End": "Field"
+			},
+			{
+				"CardName": "Cyber Angel Benten",
+				"Start": "Hand",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Diviner of the Herald",
+				"Start": "Deck",
+				"End": "Hand"
+			}
+		]
+	}
+]
