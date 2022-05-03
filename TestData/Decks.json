@@ -211,6 +211,214 @@
 		"History": []
 	},
 	{
+		"Deckname": "DrytronMD",
+		"Zones": [
+			{
+				"Label": "Hand",
+				"Cards": []
+			},
+			{
+				"Label": "Deck",
+				"Cards": [
+					{
+						"Name": "Ash Blossom & Joyous Spring",
+						"Count": 3
+					},
+					{
+						"Name": "Diviner of the Herald",
+						"Properties": [ "Monster", "Fairy" ],
+						"Count": 3
+					},
+					{
+						"Name": "Drytron Delta Altais",
+						"Properties": [ "Monster", "Drytron", "LV1"  ],
+						"Count": 1
+					},
+					{
+						"Name": "Drytron Beta Rastaban",
+						"Properties": [ "Monster", "Drytron", "LV1"  ],
+						"Count": 1
+					},
+					{
+						"Name": "Drytron Gamma Eltanin",
+						"Properties": [ "Monster", "Drytron", "LV1"  ],
+						"Count": 3
+					},
+					{
+						"Name": "Drytron Zeta Aldhibah",
+						"Properties": [ "Monster", "Drytron", "LV1"  ],
+						"Count": 3
+					},
+					{
+						"Name": "Drytron Alpha Thuban",
+						"Properties": [ "Monster", "Drytron", "LV1"  ],
+						"Count": 3
+					},
+					{
+						"Name": "Drytron Meteonis Draconids",
+						"Properties": [ "Monster", "Ritual", "Drytron" ],
+						"Count": 1
+					},
+					{
+						"Name": "Cyber Angel Benten",
+						"Properties": [ "Monster", "Ritual", "Fairy" ],
+						"Count": 2
+					},
+					{
+						"Name": "Cyber Angel Idaten",
+						"Properties": [ "Monster", "Ritual", "Fairy" ],
+						"Count": 1
+					},
+					{
+						"Name": "Cyber Angel Natasha",
+						"Properties": [ "Monster", "Ritual", "Fairy" ],
+						"Count": 1
+					},
+					{
+						"Name": "Harpie's Feather Duster",
+						"Count": 1
+					},
+					{
+						"Name": "Cyber Emergency",
+						"Count": 3
+					},
+					{
+						"Name": "Drytron Nova",
+						"Count": 3
+					},
+					{
+						"Name": "Preparation of Rites",
+						"Count": 2
+					},
+					{
+						"Name": "Meteonis Drytron",
+						"Properties": [ "Spell", "Ritual", "Drytron" ],
+						"Count": 1
+					},
+					{
+						"Name": "Called by the Grave",
+						"Count": 2
+					},
+					{
+						"Name": "Drytron Fafnir",
+						"Count": 1
+					},
+					{
+						"Name": "Eva",
+						"Properties": [ "Monster", "Fairy" ],
+						"Count": 3
+					},
+					{
+						"Name": "Herald Of Orange Light",
+						"Properties": [ "Monster", "Fairy" ],
+						"Count": 2
+					},
+					{
+						"Name": "Herald Of Perfection",
+						"Properties": [ "Monster", "Fairy", "Ritual" ],
+						"Count": 1
+					},
+					{
+						"Name": "Drytron Meteonis Quadrantids",
+						"Properties": [ "Monster", "Ritual", "Drytron" ],
+						"Count": 1
+					},
+					{
+						"Name": "Lightning Storm",
+						"Count": 1
+					},
+					{
+						"Name": "Infinite Impermanence",
+						"Count": 2
+					}
+				]
+			},
+			{
+				"Label": "Graveyard",
+				"Cards": []
+			},
+			{
+				"Label": "Banish",
+				"Cards": []
+			},
+			{
+				"Label": "Field",
+				"Cards": []
+			},
+			{
+				"Label": "XYZMats",
+				"Cards": []
+			},
+			{
+				"Label": "ExtraDeck",
+				"Cards": [
+					{
+						"Name": "Kikinagashi Fucho",
+						"Count": 1
+					},
+					{
+						"Name": "Elder Entity N'tss",
+						"Count": 1
+					},
+					{
+						"Name": "Herald of the Arc Light",
+						"Count": 1
+					},
+					{
+						"Name": "Divine Arsenal AA-ZEUS - Sky Thunder",
+						"Count": 1
+					},
+					{
+						"Name": "Beatrice, Lady of the Eternal",
+						"Count": 1
+					},
+					{
+						"Name": "Downerd Magician",
+						"Count": 1
+					},
+					{
+						"Name": "Drytron Mu Beta Fafnir",
+						"Properties": [ "Monster", "Drytron" ],
+						"Count": 3
+					},
+					{
+						"Name": "Accesscode Talker",
+						"Count": 1
+					},
+					{
+						"Name": "Apollousa, Bow of the Goddess",
+						"Count": 1
+					},
+					{
+						"Name": "Knightmare Unicorn",
+						"Count": 1
+					},
+					{
+						"Name": "Knightmare Phoenix",
+						"Count": 1
+					},
+					{
+						"Name": "Herald Of Mirage Lights",
+						"Count": 1
+					},
+					{
+						"Name": "I:P Masquerena",
+						"Count": 1
+					},
+					{
+						"Name": "Linkuriboh",
+						"Count": 1
+					}
+				]
+			},
+			{
+				"Label": "SideDeck",
+				"Cards": []
+			}
+		],
+		"History": []
+	},
+	{
 		"Deckname": "Dragonmaid",
 		"Zones": [
 			{
@@ -418,7 +626,7 @@
 				]
 			},
 			{
-				"Label": "SideDeckaDeck",
+				"Label": "SideDeck",
 				"Cards": []
 			}
 		],

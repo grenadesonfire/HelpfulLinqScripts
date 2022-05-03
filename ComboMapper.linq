@@ -7,39 +7,102 @@ void Main()
 	
 	//ConvertTextDocument(Path.Combine(DIR, "2022_03_Dragonmaid.txt"));
 	
-	var d = decks.FirstOrDefault(d => d.Deckname == "Dragonmaid");
+	//DragonMaidTest(decks);
+
+	DrytronTest(decks);
+}
+
+void DrytronTest(List<State> decks)
+{
+	// Drytron
+	var d = decks.FirstOrDefault(d => d.Deckname == "DrytronMD");
+	var desc = DeltaDescription.ReadFile(d, "DrytronMD.json");
+	d = d.Expand();
+	//desc.Dump("Moves");
+	var deckZone = d["Deck"];
+	var handZone = d["Hand"];
+	
+	handZone.AddCard(deckZone.RemoveCard("Drytron Alpha Thuban"));
+	handZone.AddCard(deckZone.RemoveCard("Drytron Zeta Aldhibah"));
+	handZone.AddCard(deckZone.RemoveCard("Ash Blossom & Joyous Spring"));
+	handZone.AddCard(deckZone.RemoveCard("Ash Blossom & Joyous Spring"));
+	handZone.AddCard(deckZone.RemoveCard("Ash Blossom & Joyous Spring"));
+	GetLeafs(CreateMap(d, desc))
+		.Where(d => 
+			d.State["Field"]
+				.Cards
+				.Any(c => c.Name == "Herald Of Perfection") &&
+			d.State["Field"]
+				.Cards
+				.Any(c => c.Name == "Herald Of Perfection")).Dump("Finished");
+
+	//Simulate(10, d, desc);
+}
+
+void DragonMaidTest(List<State> decks)
+{
+	var d = decks.FirstOrDefault(d => d.Deckname == "Dragonmaid").Expand();
 	var desc = System.Text.Json.JsonSerializer.Deserialize<List<DeltaDescription>>(File.ReadAllText(Path.Combine(DIR, "Dragonmaid.json")));
+	desc.Count().Dump();
 	var deckZone = d["Deck"];
 	var handZone = d["Hand"];
 
-	handZone.AddCard(deckZone.RemoveCard("Solemn Strike"));
-	handZone.AddCard(deckZone.RemoveCard("Ash Blossom & Joyous Spring"));
-	handZone.AddCard(deckZone.RemoveCard("Gold Sarcophagus"));
+	// Situation 1
+	//handZone.AddCard(deckZone.RemoveCard("Solemn Strike"));
+	//handZone.AddCard(deckZone.RemoveCard("Ash Blossom & Joyous Spring"));
+	//handZone.AddCard(deckZone.RemoveCard("Gold Sarcophagus"));
+	//handZone.AddCard(deckZone.RemoveCard("Dragonmaid Hospitality"));
+	//handZone.AddCard(deckZone.RemoveCard("Nurse Dragonmaid"));
+	// Situation 2
+	//handZone.AddCard(deckZone.RemoveCard("Nurse Dragonmaid"));
+	//handZone.AddCard(deckZone.RemoveCard("Dragonmaid Tidying"));
+	//handZone.AddCard(deckZone.RemoveCard("Dragonmaid Changeover"));
+	//handZone.AddCard(deckZone.RemoveCard("Monster Reborn"));
+	//handZone.AddCard(deckZone.RemoveCard("World Legacy Guardragon"));
+	// Situation 3
+	//handZone.AddCard(deckZone.RemoveCard("Noctovision Dragon"));
+	//handZone.AddCard(deckZone.RemoveCard("Noctovision Dragon"));
+	//handZone.AddCard(deckZone.RemoveCard("Dragonmaid Changeover"));
+	//handZone.AddCard(deckZone.RemoveCard("Dragonmaid Tinkhec"));
+	//handZone.AddCard(deckZone.RemoveCard("World Legacy Guardragon"));
+	// Situation 4
 	handZone.AddCard(deckZone.RemoveCard("Dragonmaid Hospitality"));
-	handZone.AddCard(deckZone.RemoveCard("Nurse Dragonmaid"));
-	CreateMap(d, desc);
+	handZone.AddCard(deckZone.RemoveCard("Parlor Dragonmaid"));
+	handZone.AddCard(deckZone.RemoveCard("Ash Blossom & Joyous Spring"));
+	handZone.AddCard(deckZone.RemoveCard("Dragonmaid Tidying"));
+	handZone.AddCard(deckZone.RemoveCard("Red-Eyes Darkness Metal Dragon"));
+	GetLeafs(CreateMap(d, desc)).Dump("Finished");
+}
 
-	// Drytron
-	//var d = decks.FirstOrDefault(d => d.Deckname == "Drytron");
-	//var desc = System.Text.Json.JsonSerializer.Deserialize<List<DeltaDescription>>(File.ReadAllText(Path.Combine(DIR, "Drytron.json")));
-	//var deckZone = d["Deck"];
-	//var handZone = d["Hand"];
-	//
-	//handZone.AddCard(deckZone.RemoveCard("Foolish Burial"));
-	//handZone.AddCard(deckZone.RemoveCard("Drytron Gamma Eltanin"));
-	//handZone.AddCard(deckZone.RemoveCard("Ash Blossom & Joyous Spring"));
-	//handZone.AddCard(deckZone.RemoveCard("Ash Blossom & Joyous Spring"));
-	//handZone.AddCard(deckZone.RemoveCard("Ash Blossom & Joyous Spring"));
-	//CreateMap(d, desc);
+List<PotentialMove> GetLeafs(List<PotentialMove> potentialMoves)
+{
+	var ret = new List<PotentialMove>();
+	var q = new Queue<PotentialMove>();
 	
-	//Simulate(10, d, desc);
+	potentialMoves.ForEach(m => q.Enqueue(m));
+	
+	while(q.Count() != 0)
+	{
+		var dq = q.Dequeue();
+		
+		// Go through the children
+		if(dq.ChildMoves != null && dq.ChildMoves.Count() > 0)
+		{
+			dq.ChildMoves.ForEach(cm => q.Enqueue(cm));
+		}
+		else {
+			ret.Add(dq);
+		}
+	}
+	
+	return ret.OrderBy(r => r.State.History.Count()).ToList();
 }
 
 void Simulate(int simulations, State d, List<DeltaDescription> descs)
 {
 	var drytronCount = new int[6];
-	
-	for(var run=0;run<simulations;run++)
+
+	for (var run = 0; run < simulations; run++)
 	{
 		var s = d.Copy();
 		var deck = s.Zones.FirstOrDefault(z => z.Label == "Deck");
@@ -47,21 +110,22 @@ void Simulate(int simulations, State d, List<DeltaDescription> descs)
 
 
 		deck.Cards = deck.Cards.OrderBy(c => Guid.NewGuid()).ToList();
-		
-		for(var draw=0;draw<5;draw++)
+
+		for (var draw = 0; draw < 5; draw++)
 		{
 			hand.Cards.Add(deck.Cards.First());
 			deck.Cards.RemoveAt(0);
 		}
-		
+
 		//Some opening hand stats
-		drytronCount[hand.Cards.Distinct().Count(c => c.Name.Contains("Drytron") || c.Name.Contains("Cyber Emergency"))]++;
-		
+		//drytronCount[hand.Cards.Distinct().Count(c => c.Name.Contains("Drytron") || c.Name.Contains("Cyber Emergency"))]++;
+
 		//Run some simulations
-		CreateMap(s, descs);
+		
+		GetLeafs(CreateMap(s, descs));
 	}
 
-	drytronCount.Select(c => (c * 1.0m / simulations * 100m)).Dump("Testing the stats");
+	//drytronCount.Select(c => (c * 1.0m / simulations * 100m)).Dump("Testing the stats");
 }
 
 void ConvertTextDocument(string path)
@@ -203,6 +267,7 @@ List<PotentialMove> CreateMap(State state, List<DeltaDescription> deltas)
 
 class PotentialMove
 {
+	public Guid Id { get; set; } = Guid.NewGuid();
 	public State State { get; set; }
 	public DeltaDescription Move { get; set; }
 	public List<PotentialMove> ChildMoves { get; set; } = new List<PotentialMove>();
@@ -228,7 +293,23 @@ class State
 		s.History.AddRange(History);
 		return s;
 	}
-	
+
+	internal State Expand()
+	{
+		foreach(var z in Zones.Where(z => z.Cards.Any(c => c.Count > 1)))
+		{
+			var multiCards = z.Cards.Where(c => c.Count > 1).ToList();
+			foreach(var c in multiCards)
+			{
+				z.Cards.Remove(c);
+				
+				z.Cards.AddRange(c.CopyByCount());
+			}
+		}
+		
+		return this;
+	}
+
 	public Zone this[string ZoneName]
 	{
 		get {
@@ -267,6 +348,113 @@ class DeltaDescription
 	public bool UniquePerTurn { get; set; }
 	public List<Delta> Deltas { get; set; }
 
+	internal static List<DeltaDescription> ReadFile(State s, string file)
+	{
+		var deltas = System.Text.Json.JsonSerializer.Deserialize<List<DeltaDescription>>(File.ReadAllText(Path.Combine(DIR, file)));
+		var ret = new List<DeltaDescription>();
+		
+		foreach(var delta in deltas)
+		{
+			if(delta.Deltas.Any(d => d.Properties != null && d.Properties.Count() != 0))
+			{
+				var miniRet = new List<DeltaDescription>();
+				foreach(var theta in delta.Deltas)
+				{
+					if(miniRet.Count() == 0){
+						if(theta.Properties == null){
+							miniRet.Add(
+								new DeltaDescription{
+									Deltas = new List<Delta>{
+										theta
+									}
+								});
+						}
+						else
+						{
+							var applicable = new List<Card>();
+
+							foreach (var z in s.Zones)
+							{
+								if (z.Cards.Any(c => c.HasProperties(theta.Properties))) applicable.AddRange(z.Cards.Where(c => c.HasProperties(theta.Properties)));
+							}
+							
+							foreach(var c in applicable)
+							{
+								miniRet.Add(
+									new DeltaDescription
+										{
+											Deltas = new List<Delta>{
+												new Delta{
+													CardName = c.Name,
+													Start = theta.Start,
+													End = theta.End
+												}
+											}
+										});
+							}
+						}
+					}
+					//Expand the existing
+					else
+					{
+						if (theta.Properties == null)
+						{
+							foreach(var t in miniRet){
+								if(!t.Deltas.Any(d => d.CardName == theta.CardName)) t.Deltas.Add(theta);
+							}
+						}
+						else
+						{
+							
+							var applicable = new List<Card>();
+
+							foreach(var z in s.Zones){
+								if(z.Cards.Any(c => c.HasProperties(theta.Properties))) applicable.AddRange(z.Cards.Where(c => c.HasProperties(theta.Properties)));
+							}
+							
+							var miniRet2 = new List<DeltaDescription>();
+							
+							foreach(var card in applicable)
+							{
+								foreach(var dd in miniRet)
+								{
+									if (!dd.Deltas.Any(d => d.CardName == card.Name)){
+										var dd2 = dd.Copy();
+										dd2.Deltas.Add(
+											new Delta
+											{
+												CardName = card.Name,
+												Start = theta.Start,
+												End = theta.End
+											});
+										miniRet2.Add(dd2);
+									}
+								}
+							}
+							
+							miniRet = miniRet2;
+						}
+					}
+				}
+
+				ret.AddRange(miniRet);
+			}
+			else{
+				ret.Add(delta);
+			}
+		}
+		
+		return ret;
+	}
+
+	DeltaDescription Copy()
+	{
+		return new DeltaDescription{
+			UniquePerTurn = UniquePerTurn,
+			Deltas = Deltas.Select(d => d).ToList()
+		};
+	}
+
 	internal State Execute(State state)
 	{
 		var s = state.Copy();
@@ -286,7 +474,7 @@ class DeltaDescription
 				c = zStart.Cards.FirstOrDefault(ca => d.Properties.All(p => ca.Properties.Contains(p)));
 			}
 			
-			if(c == null) throw new Exception("oof no card, them properties though");
+			if(c == null) continue;//throw new Exception("oof no card, them properties though");
 
 			zStart.Cards.Remove(c);
 			zEnd.Cards.Add(c);
@@ -353,7 +541,29 @@ class Delta
 class Card
 {
 	public string Name { get; set; }
+	public int Count { get; set; }
 	public List<string> Properties { get; set; } = new List<string>();
+
+	internal IEnumerable<Card> CopyByCount()
+	{
+		var ret = new List<Card>();
+		
+		for(var idx=0;idx<Count;idx++)
+		{
+			ret.Add(
+				new Card{
+					Name = Name,
+					Properties = Properties
+				});
+		}
+		
+		return ret;
+	}
+
+	internal bool HasProperties(List<string> properties)
+	{
+		return properties.All(p => Properties.Contains(p));
+	}
 }
 
 

@@ -2,6 +2,453 @@
 	{
 		"Deltas": [
 			{
+				"CardName": "Chamber Dragonmaid",
+				"Start": "Field",
+				"End": "Field"
+			},
+			{
+				"CardName": "Parlor Dragonmaid",
+				"Start": "Graveyard",
+				"End": "Field"
+			},
+			{
+				"CardName": "Dragonmaid Hospitality",
+				"Start": "Hand",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Dragonmaid Lorpar",
+				"Start": "Deck",
+				"End": "Graveyard"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Parlor Dragonmaid",
+				"Start": "Field",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Striker Dragon",
+				"Start": "ExtraDeck",
+				"End": "Field"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Striker Dragon",
+				"Start": "Field",
+				"End": "Banish"
+			},
+			{
+				"CardName": "Red-Eyes Darkness Metal Dragon",
+				"Start": "Hand",
+				"End": "Field"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Chamber Dragonmaid",
+				"Start": "Graveyard",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Parlor Dragonmaid",
+				"Start": "Graveyard",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Dragonmaid Lorpar",
+				"Start": "Graveyard",
+				"End": "Field"
+			},
+			{
+				"CardName": "Red-Eyes Darkness Metal Dragon",
+				"Start": "Field",
+				"End": "Field"
+			},
+			{
+				"CardName": "Dragonmaid Hospitality",
+				"Start": "Deck",
+				"End": "Hand"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Chamber Dragonmaid",
+				"Start": "Graveyard",
+				"End": "Field"
+			},
+			{
+				"CardName": "Parlor Dragonmaid",
+				"Start": "Graveyard",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Dragonmaid Lorpar",
+				"Start": "Graveyard",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Red-Eyes Darkness Metal Dragon",
+				"Start": "Field",
+				"End": "Field"
+			},
+			{
+				"CardName": "Dragonmaid Hospitality",
+				"Start": "Deck",
+				"End": "Hand"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Chamber Dragonmaid",
+				"Start": "Graveyard",
+				"End": "Field"
+			},
+			{
+				"CardName": "Parlor Dragonmaid",
+				"Start": "Graveyard",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Dragonmaid Lorpar",
+				"Start": "Graveyard",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Red-Eyes Darkness Metal Dragon",
+				"Start": "Field",
+				"End": "Field"
+			},
+			{
+				"CardName": "Dragonmaid Changeover",
+				"Start": "Deck",
+				"End": "Hand"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Chamber Dragonmaid",
+				"Start": "Graveyard",
+				"End": "Field"
+			},
+			{
+				"CardName": "Parlor Dragonmaid",
+				"Start": "Graveyard",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Dragonmaid Lorpar",
+				"Start": "Graveyard",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Red-Eyes Darkness Metal Dragon",
+				"Start": "Field",
+				"End": "Field"
+			},
+			{
+				"CardName": "Dragonmaid Tidying",
+				"Start": "Deck",
+				"End": "Hand"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Chamber Dragonmaid",
+				"Start": "Field",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Red-Eyes Darkness Metal Dragon",
+				"Start": "Field",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Dragonmaid Changeover",
+				"Start": "Hand",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Dragonmaid Sheou",
+				"Start": "ExtraDeck",
+				"End": "Field"
+			}
+		]
+	},
+		{
+		"Deltas": [
+			{
+				"CardName": "Dragonmaid Lorpar",
+				"Start": "Field",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Red-Eyes Darkness Metal Dragon",
+				"Start": "Field",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Dragonmaid Changeover",
+				"Start": "Hand",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Dragonmaid Sheou",
+				"Start": "ExtraDeck",
+				"End": "Field"
+			}
+		]
+	},
+		{
+		"Deltas": [
+			{
+				"CardName": "Parlor Dragonmaid",
+				"Start": "Field",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Red-Eyes Darkness Metal Dragon",
+				"Start": "Field",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Dragonmaid Changeover",
+				"Start": "Hand",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Dragonmaid Sheou",
+				"Start": "ExtraDeck",
+				"End": "Field"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Parlor Dragonmaid",
+				"Start": "Field",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Red-Eyes Darkness Metal Dragon",
+				"Start": "Field",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Hieratic Seal Of The Heavenly Spheres",
+				"Start": "ExtraDeck",
+				"End": "Field"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Dragonmaid Lorpar",
+				"Start": "Field",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Red-Eyes Darkness Metal Dragon",
+				"Start": "Field",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Hieratic Seal Of The Heavenly Spheres",
+				"Start": "ExtraDeck",
+				"End": "Field"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Chamber Dragonmaid",
+				"Start": "Field",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Red-Eyes Darkness Metal Dragon",
+				"Start": "Field",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Hieratic Seal Of The Heavenly Spheres",
+				"Start": "ExtraDeck",
+				"End": "Field"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Dragonmaid Ernus",
+				"Start": "Hand",
+				"End": "Field"
+			},
+			{
+				"CardName": "Nurse Dragonmaid",
+				"Count": 1,
+				"Start": "Deck",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Parlor Dragonmaid",
+				"Count": 3,
+				"Start": "Deck",
+				"End": "Deck"
+			},
+			{
+				"CardName": "Chamber Dragonmaid",
+				"Count": 3,
+				"Start": "Deck",
+				"End": "Deck"
+			},
+			{
+				"CardName": "Dragonmaid Hospitality",
+				"Start": "Hand",
+				"End": "Field"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Black Metal Dragon",
+				"Start": "Hand",
+				"End": "Field"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Black Metal Dragon",
+				"Start": "Field",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Striker Dragon",
+				"Start": "ExtraDeck",
+				"End": "Field"
+			},
+			{
+				"CardName": "Red-Eyes Darkness Metal Dragon",
+				"Start": "Deck",
+				"End": "Hand"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Dragonmaid Sheou",
+				"Start": "ExtraDeck",
+				"End": "Field"
+			},
+			{
+				"CardName": "Chamber Dragonmaid",
+				"Start": "Field",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Noctovision Dragon",
+				"Start": "Hand",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Dragonmaid Changeover",
+				"Start": "Hand",
+				"End": "Graveyard"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Chamber Dragonmaid",
+				"Start": "Hand",
+				"End": "Field"
+			},
+			{
+				"CardName": "Dragonmaid Changeover",
+				"Start": "Deck",
+				"End": "Hand"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Striker Dragon",
+				"Start": "Field",
+				"End": "Banish"
+			},
+			{
+				"CardName": "Red-Eyes Darkness Metal Dragon",
+				"Start": "Hand",
+				"End": "Field"
+			},
+			{
+				"CardName": "Noctovision Dragon",
+				"Start": "Hand",
+				"End": "Field"
+			},
+			{
+				"CardName": "Black Metal Dragon",
+				"Start": "Graveyard",
+				"End": "Field"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Chamber Dragonmaid",
+				"Start": "Hand",
+				"End": "Field"
+			},
+			{
+				"CardName": "Dragonmaid Hospitality",
+				"Start": "Deck",
+				"End": "Hand"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Chamber Dragonmaid",
+				"Start": "Hand",
+				"End": "Field"
+			},
+			{
+				"CardName": "Dragonmaid Tidying",
+				"Start": "Deck",
+				"End": "Hand"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
 				"CardName": "Gold Sarcophagus",
 				"Start": "Hand",
 				"End": "Graveyard"
@@ -10,11 +457,6 @@
 				"CardName": "Tempest, Dragon Ruler Of Storms",
 				"Start": "Deck",
 				"End": "Banish"
-			},
-			{
-				"CardName": "Dragonmaid Hospitality",
-				"Start": "Deck",
-				"End": "Deck"
 			},
 			{
 				"CardName": "Parlor Dragonmaid",
@@ -82,6 +524,104 @@
 				"CardName": "Dragonmaid Tidying",
 				"Start": "Deck",
 				"End": "Hand"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Nurse Dragonmaid",
+				"Start": "Field",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Striker Dragon",
+				"Start": "ExtraDeck",
+				"End": "Field"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Nurse Dragonmaid",
+				"Start": "Graveyard",
+				"End": "Field"
+			},
+			{
+				"CardName": "World Legacy Guardragon",
+				"Start": "Hand",
+				"End": "Field"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Nurse Dragonmaid",
+				"Start": "Field",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Striker Dragon",
+				"Start": "Field",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Dragunity Knight - Romulus",
+				"Start": "ExtraDeck",
+				"End": "Field"
+			},
+			{
+				"CardName": "Dragon Ravine",
+				"Start": "Deck",
+				"End": "Hand"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Dragon Ravine",
+				"Start": "Hand",
+				"End": "Field"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Nurse Dragonmaid",
+				"Start": "Hand",
+				"End": "Field"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Nurse Dragonmaid",
+				"Start": "Field",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Guardragon Pisty",
+				"Start": "ExtraDeck",
+				"End": "Field"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Monster Reborn",
+				"Start": "Hand",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Nurse Dragonmaid",
+				"Start": "Graveyard",
+				"End": "Field"
 			}
 		]
 	},
