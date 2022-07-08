@@ -4,84 +4,156 @@ const string DIR = @"C:\Users\Nick\Documents\LINQPad Queries\GitLinq\TestData\";
 void Main()
 {
 	var decks = System.Text.Json.JsonSerializer.Deserialize<List<State>>(File.ReadAllText(Path.Combine(DIR, "Decks.json")));
-	
+
 	//ConvertTextDocument(Path.Combine(DIR, "2022_07_Drytron.txt"));
-	
+	//ConvertTextDocument(Path.Combine(DIR, "2022_07_Despia.txt"));
 	//DragonMaidTest(decks);
 
 	//DrytronTest(decks);
-	
-	EvaluteHands(
-		1000* 1000,
-		decks.FirstOrDefault(d => d.Deckname == "Drytron202207DK"),
-		new List<GoalList>
+
+	var despiaEvaluation = new List<GoalList>
 		{
 			new GoalList{
-				Category = "Success",
+				Category = "Aluber / Branded Fusion",
 				CardMatches = new List<CardMatches>{
 					new CardMatches{
 						Options = new List<CardMatch>{
 							new CardMatch(){
-								PropertyMatch = new List<string>(){
-									"Drytron",
-									"LV1"
-								}
+								CardName = "Aluber the Jester of Despia"
 							},
 							new CardMatch(){
-								CardName = "Drytron Nova"
+								CardName = "Branded Fusion"
 							},
 							new CardMatch(){
-								CardName = "Foolish Burial"
+								CardName = "Branded Opening"
+							}
+						}
+					}
+				},
+				MultipleInstancesAllowed = false
+			},
+			new GoalList{
+				Category = "Despia + Fusion",
+				CardMatches = new List<CardMatches>{
+					new CardMatches{
+						Options = new List<CardMatch>{
+							new CardMatch(){
+								CardName = "Dramaturge of Despia"
 							},
 							new CardMatch(){
-								CardName = "Drytron Fafnir"
-							},
-							new CardMatch(){
-								CardName = "Cyber Emergency"
-							},
-							new CardMatch(){
-								CardName = "Jack-In-The-Hand"
-							},
-							new CardMatch(){
-								CardName = "Ritual Sanctuary"
-							},
-							new CardMatch(){
-								CardName = "Diviner of the Herald"
-							},
-							new CardMatch(){
-								CardName = "Cyber Angel Benten"
+								CardName = "Despian Tragedy"
 							}
 						}
 					},
 					new CardMatches{
+						Options = new List<UserQuery.CardMatch>{
+							new CardMatch(){
+								CardName = "Polymerization"
+							}
+						}
+					}
+				},
+				MultipleInstancesAllowed = false
+			},
+			new GoalList{
+				Category = "Allure",
+				CardMatches = new List<CardMatches>{
+					new CardMatches{
 						Options = new List<CardMatch>{
 							new CardMatch(){
-								PropertyMatch = new List<string>(){
-									"Drytron",
-									"LV1"
-								}
-							},
-							new CardMatch(){
-								CardName = "Jack-In-The-Hand"
-							},
-							new CardMatch(){
-								CardName = "Drytron Nova"
-							},
-							new CardMatch(){
-								CardName = "Foolish Burial"
-							},
-							new CardMatch(){
-								CardName = "Drytron Fafnir"
-							},
-							new CardMatch(){
-								CardName = "Cyber Emergency"
+								CardName = "Allure of Darkness"
 							},
 						}
 					}
 				},
 				MultipleInstancesAllowed = false
-			}
-		});
+			},
+		};
+
+
+	EvaluteHands(
+			2 * 1000* 1000,
+			decks.FirstOrDefault(d => d.Deckname == "DespiaBranded"),
+			despiaEvaluation,
+			false);
+
+	//	var drytronEvaluation = new List<GoalList>
+	//		{
+	//			new GoalList{
+	//				Category = "Success",
+//				CardMatches = new List<CardMatches>{
+//					new CardMatches{
+//						Options = new List<CardMatch>{
+//							new CardMatch(){
+//								PropertyMatch = new List<string>(){
+//									"Drytron",
+//									"LV1"
+//								}
+//							},
+//							new CardMatch(){
+//								CardName = "Drytron Nova"
+//							},
+//							new CardMatch(){
+//								CardName = "Foolish Burial"
+//							},
+//							new CardMatch(){
+//								CardName = "Drytron Fafnir"
+//							},
+//							new CardMatch(){
+//								CardName = "Cyber Emergency"
+//							},
+//							new CardMatch(){
+//								CardName = "Jack-In-The-Hand"
+//							},
+//							new CardMatch(){
+//								CardName = "Ritual Sanctuary"
+//							},
+//							new CardMatch(){
+//								CardName = "Diviner of the Herald"
+//							},
+//							new CardMatch(){
+//								CardName = "Cyber Angel Benten"
+//							},
+//							new CardMatch(){
+//								CardName = "Terraforming"
+//							}
+//						}
+//					},
+//					new CardMatches{
+//						Options = new List<CardMatch>{
+//							new CardMatch(){
+//								PropertyMatch = new List<string>(){
+//									"Drytron",
+//									"LV1"
+//								}
+//							},
+//							new CardMatch(){
+//								CardName = "Jack-In-The-Hand"
+//							},
+//							new CardMatch(){
+//								CardName = "Drytron Nova"
+//							},
+//							new CardMatch(){
+//								CardName = "Foolish Burial"
+//							},
+//							new CardMatch(){
+//								CardName = "Drytron Fafnir"
+//							},
+//							new CardMatch(){
+//								CardName = "Cyber Emergency"
+//							},
+//						}
+//					}
+//				},
+//				MultipleInstancesAllowed = false
+//			}
+//		};
+//
+//
+//	EvaluteHands(
+//		2 * 1000 * 1000, //2 * 1000* 1000,
+//		decks.FirstOrDefault(d => d.Deckname == "Drytron202207DK"),
+//		drytronEvaluation);
 }
 
 class CardMatch
@@ -148,7 +220,7 @@ class GoalList
 	}
 }
 
-void EvaluteHands(int limit, State deck, List<GoalList> validHands)
+void EvaluteHands(int limit, State deck, List<GoalList> validHands, bool debug)
 {
 	deck.Expand();
 	new {
@@ -178,7 +250,7 @@ void EvaluteHands(int limit, State deck, List<GoalList> validHands)
 		if (res == string.Empty)
 		{
 			res = "Fail";
-			//handZone.Cards.Select(c => c.Name).Dump();
+			if(debug) handZone.Cards.Select(c => c.Name).Dump();
 		}
 		
 		if(!results.ContainsKey(res)) results.Add(res, 0);
@@ -186,6 +258,13 @@ void EvaluteHands(int limit, State deck, List<GoalList> validHands)
 		results[res]++;
 	}
 	sw.Stop();
+	
+	var total = results.Keys.Sum(r => results[r]);
+
+	new
+	{
+		Percentages = results.Keys.Select(k => new { Name = k, Chance = results[k] * 1.0m / total * 1.0m * 100m }).OrderByDescending(k => k.Chance)
+	}.Dump("Resulting Hands");
 	
 	results.Dump("Hands");
 	
@@ -196,12 +275,7 @@ string EvaluateHand(State td, List<GoalList> validHands)
 {
 	var hand = td["Hand"];
 	foreach(var vhand in validHands)
-	{
-		//if(!validHands.Any(h => h.Valid(hand)))
-		//{
-		//	return false;
-		//}
-		
+	{		
 		if(vhand.Valid(hand)) return vhand.Category;
 	}
 	

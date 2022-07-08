@@ -640,15 +640,14 @@
         "Label": "Deck",
         "Cards": [
           { "Name": "PSY-Frame Driver", "Count": 0, "Properties": [] },
-          { "Name": "Nibiru, the Primal Being", "Count": 0, "Properties": [] },
-          { "Name": "Dimension Shifter", "Count": 0, "Properties": [] },
           {
             "Name": "Ash Blossom \u0026 Joyous Spring",
             "Count": 3,
             "Properties": []
           },
           { "Name": "PSY-Framegear Gamma", "Count": 3, "Properties": [] },
-          { "Name": "Diviner of the Herald", "Count": 3, "Properties": [ "Fairy", "LV2" ] },
+          { "Name": "Diviner of the Herald", "Count": 2, "Properties": [ "Fairy", "LV2" ] },
+          { "Name": "Vanity's", "Count": 1, "Properties": [ "Fairy", "LV8" ] },
           {
             "Name": "Drytron Delta Altais",
             "Properties": ["Monster", "Drytron", "LV1"],
@@ -692,12 +691,12 @@
             "Properties": []
           },
           { "Name": "Terraforming", "Count": 0, "Properties": [] },
-          { "Name": "Crossout Designator", "Count": 3, "Properties": [] },
           { "Name": "Twin Twisters", "Count": 0, "Properties": [] },
           { "Name": "Drytron Fafnir", "Count": 0, "Properties": [] },
           { "Name": "Ritual Sanctuary", "Count": 0, "Properties": [] },
           { "Name": "Meteonis Drytron", "Count": 0, "Properties": [] },
-          { "Name": "Infinite Impermanence", "Count": 3, "Properties": [] }
+          { "Name": "Infinite Impermanence", "Count": 2, "Properties": [] },
+          { "Name": "Magikey Engine", "Count": 2, "Properties": [] }
         ]
       },
       { "Label": "Graveyard", "Cards": [] },
@@ -739,8 +738,110 @@
           { "Name": "Linkuriboh", "Count": 0, "Properties": [] }
         ]
       },
-      { "Label": "SideDeckaDeck", "Cards": [] }
+      { "Label": "SideDeck", "Cards": [] }
+    ],
+    "History": []
+  },
+  {
+    "Deckname": "DespiaBranded",
+    "Zones": [
+      { "Label": "Hand", "Cards": [] },
+      {
+        "Label": "Deck",
+        "Cards": [
+          { "Name": "Albion the Shrouded Dragon", "Count": 0, "Properties": [] },
+          { "Name": "Ad Libitum of Despia", "Count": 0, "Properties": [] },
+          { "Name": "Aluber the Jester of Despia", "Count": 3, "Properties": [] },
+          { "Name": "Fallen of Albaz", "Count": 2, "Properties": [] },
+          { "Name": "The Golden Swordsoul", "Count": 0, "Properties": [] },
+          { "Name": "Springans Kitt", "Count": 0, "Properties": [] },
+          { "Name": "Edge Imp Chain", "Count": 2, "Properties": [] },
+          { "Name": "Tri-Brigade Mercourier", "Count": 0, "Properties": [] },
+          {
+            "Name": "Ash Blossom \u0026 Joyous Spring",
+            "Count": 3,
+            "Properties": []
+          },
+          { "Name": "Dramaturge of Despia", "Count": 1, "Properties": [] },
+          { "Name": "Despian Tragedy", "Count": 2, "Properties": [] },
+          { "Name": "Allure of Darkness", "Count": 3, "Properties": [] },
+          { "Name": "Branded Fusion", "Count": 3, "Properties": [] },
+          { "Name": "Frightfur Patchwork", "Count": 2, "Properties": [] },
+          {
+            "Name": "Harpie\u0027s Feather Duster",
+            "Count": 0,
+            "Properties": []
+          },
+          { "Name": "Polymerization", "Count": 0, "Properties": [] },
+          { "Name": "Polymerization", "Count": 0, "Properties": [] },
+          { "Name": "Branded Opening", "Count": 3, "Properties": [] },
+          { "Name": "Branded in Red", "Count": 2, "Properties": [] },
+          { "Name": "Called by the Grave", "Count": 0, "Properties": [] },
+          { "Name": "Super Polymerization", "Count": 2, "Properties": [] },
+          { "Name": "Twin Twisters", "Count": 2, "Properties": [] },
+          { "Name": "Branded Lost", "Count": 0, "Properties": [] },
+          {
+            "Name": "Despia, Theater of the Branded",
+            "Count": 0,
+            "Properties": []
+          },
+          { "Name": "Branded Sword", "Count": 0, "Properties": [] }
+        ]
+      },
+      { "Label": "Graveyard", "Cards": [] },
+      { "Label": "Banish", "Cards": [] },
+      { "Label": "Field", "Cards": [] },
+      {
+        "Label": "ExtraDeck",
+        "Cards": [
+          { "Name": "Despian Proskenion", "Count": 0, "Properties": [] },
+          { "Name": "Guardian Chimera", "Count": 0, "Properties": [] },
+          {
+            "Name": "Mirrorjade the Iceblade Dragon",
+            "Count": 0,
+            "Properties": []
+          },
+          {
+            "Name": "Mirrorjade the Iceblade Dragon",
+            "Count": 0,
+            "Properties": []
+          },
+          {
+            "Name": "Starving Venom Fusion Dragon",
+            "Count": 0,
+            "Properties": []
+          },
+          { "Name": "Predaplant Dragostapelia", "Count": 0, "Properties": [] },
+          { "Name": "Albion the Branded Dragon", "Count": 0, "Properties": [] },
+          { "Name": "Albion the Branded Dragon", "Count": 0, "Properties": [] },
+          { "Name": "Brigrand the Glory Dragon", "Count": 0, "Properties": [] },
+          { "Name": "Despian Quaeritis", "Count": 0, "Properties": [] },
+          {
+            "Name": "Lubellion the Searing Dragon",
+            "Count": 0,
+            "Properties": []
+          },
+          {
+            "Name": "Lubellion the Searing Dragon",
+            "Count": 0,
+            "Properties": []
+          },
+          {
+            "Name": "Masquerade the Blazing Dragon",
+            "Count": 0,
+            "Properties": []
+          },
+          {
+            "Name": "Masquerade the Blazing Dragon",
+            "Count": 0,
+            "Properties": []
+          },
+          { "Name": "Titaniklad the Ash Dragon", "Count": 0, "Properties": [] }
+        ]
+      },
+      { "Label": "SideDeck", "Cards": [] }
     ],
     "History": []
   }
+  
 ]
