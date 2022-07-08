@@ -5,75 +5,210 @@ void Main()
 {
 	var decks = System.Text.Json.JsonSerializer.Deserialize<List<State>>(File.ReadAllText(Path.Combine(DIR, "Decks.json")));
 	
-	//ConvertTextDocument(Path.Combine(DIR, "2022_03_Dragonmaid.txt"));
+	//ConvertTextDocument(Path.Combine(DIR, "2022_07_Drytron.txt"));
 	
 	//DragonMaidTest(decks);
 
-	DrytronTest(decks);
-}
-
-void DrytronTest(List<State> decks)
-{
-	// Drytron
-	var d = decks.FirstOrDefault(d => d.Deckname == "DrytronMD");
-	var desc = DeltaDescription.ReadFile(d, "DrytronMD.json");
-	d = d.Expand();
-	//desc.Dump("Moves");
-	var deckZone = d["Deck"];
-	var handZone = d["Hand"];
+	//DrytronTest(decks);
 	
-	handZone.AddCard(deckZone.RemoveCard("Drytron Alpha Thuban"));
-	handZone.AddCard(deckZone.RemoveCard("Drytron Zeta Aldhibah"));
-	handZone.AddCard(deckZone.RemoveCard("Ash Blossom & Joyous Spring"));
-	handZone.AddCard(deckZone.RemoveCard("Ash Blossom & Joyous Spring"));
-	handZone.AddCard(deckZone.RemoveCard("Ash Blossom & Joyous Spring"));
-	GetLeafs(CreateMap(d, desc))
-		.Where(d => 
-			d.State["Field"]
-				.Cards
-				.Any(c => c.Name == "Herald Of Perfection") &&
-			d.State["Field"]
-				.Cards
-				.Any(c => c.Name == "Herald Of Perfection")).Dump("Finished");
-
-	//Simulate(10, d, desc);
+	EvaluteHands(
+		1000* 1000,
+		decks.FirstOrDefault(d => d.Deckname == "Drytron202207DK"),
+		new List<GoalList>
+		{
+			new GoalList{
+				Category = "Success",
+				CardMatches = new List<CardMatches>{
+					new CardMatches{
+						Options = new List<CardMatch>{
+							new CardMatch(){
+								PropertyMatch = new List<string>(){
+									"Drytron",
+									"LV1"
+								}
+							},
+							new CardMatch(){
+								CardName = "Drytron Nova"
+							},
+							new CardMatch(){
+								CardName = "Foolish Burial"
+							},
+							new CardMatch(){
+								CardName = "Drytron Fafnir"
+							},
+							new CardMatch(){
+								CardName = "Cyber Emergency"
+							},
+							new CardMatch(){
+								CardName = "Jack-In-The-Hand"
+							},
+							new CardMatch(){
+								CardName = "Ritual Sanctuary"
+							},
+							new CardMatch(){
+								CardName = "Diviner of the Herald"
+							},
+							new CardMatch(){
+								CardName = "Cyber Angel Benten"
+							}
+						}
+					},
+					new CardMatches{
+						Options = new List<CardMatch>{
+							new CardMatch(){
+								PropertyMatch = new List<string>(){
+									"Drytron",
+									"LV1"
+								}
+							},
+							new CardMatch(){
+								CardName = "Jack-In-The-Hand"
+							},
+							new CardMatch(){
+								CardName = "Drytron Nova"
+							},
+							new CardMatch(){
+								CardName = "Foolish Burial"
+							},
+							new CardMatch(){
+								CardName = "Drytron Fafnir"
+							},
+							new CardMatch(){
+								CardName = "Cyber Emergency"
+							},
+						}
+					}
+				},
+				MultipleInstancesAllowed = false
+			}
+		});
 }
 
-void DragonMaidTest(List<State> decks)
+class CardMatch
 {
-	var d = decks.FirstOrDefault(d => d.Deckname == "Dragonmaid").Expand();
-	var desc = System.Text.Json.JsonSerializer.Deserialize<List<DeltaDescription>>(File.ReadAllText(Path.Combine(DIR, "Dragonmaid.json")));
-	desc.Count().Dump();
-	var deckZone = d["Deck"];
-	var handZone = d["Hand"];
+	public string CardName { get; set; }
+	public List<string> PropertyMatch { get; set; }
 
-	// Situation 1
-	//handZone.AddCard(deckZone.RemoveCard("Solemn Strike"));
-	//handZone.AddCard(deckZone.RemoveCard("Ash Blossom & Joyous Spring"));
-	//handZone.AddCard(deckZone.RemoveCard("Gold Sarcophagus"));
-	//handZone.AddCard(deckZone.RemoveCard("Dragonmaid Hospitality"));
-	//handZone.AddCard(deckZone.RemoveCard("Nurse Dragonmaid"));
-	// Situation 2
-	//handZone.AddCard(deckZone.RemoveCard("Nurse Dragonmaid"));
-	//handZone.AddCard(deckZone.RemoveCard("Dragonmaid Tidying"));
-	//handZone.AddCard(deckZone.RemoveCard("Dragonmaid Changeover"));
-	//handZone.AddCard(deckZone.RemoveCard("Monster Reborn"));
-	//handZone.AddCard(deckZone.RemoveCard("World Legacy Guardragon"));
-	// Situation 3
-	//handZone.AddCard(deckZone.RemoveCard("Noctovision Dragon"));
-	//handZone.AddCard(deckZone.RemoveCard("Noctovision Dragon"));
-	//handZone.AddCard(deckZone.RemoveCard("Dragonmaid Changeover"));
-	//handZone.AddCard(deckZone.RemoveCard("Dragonmaid Tinkhec"));
-	//handZone.AddCard(deckZone.RemoveCard("World Legacy Guardragon"));
-	// Situation 4
-	handZone.AddCard(deckZone.RemoveCard("Dragonmaid Hospitality"));
-	handZone.AddCard(deckZone.RemoveCard("Parlor Dragonmaid"));
-	handZone.AddCard(deckZone.RemoveCard("Ash Blossom & Joyous Spring"));
-	handZone.AddCard(deckZone.RemoveCard("Dragonmaid Tidying"));
-	handZone.AddCard(deckZone.RemoveCard("Red-Eyes Darkness Metal Dragon"));
-	GetLeafs(CreateMap(d, desc)).Dump("Finished");
+	internal bool Match(Card c)
+	{
+		if(!string.IsNullOrEmpty(CardName)) return c.Name == CardName;
+		return PropertyMatch.All(p => c.Properties.Contains(p));
+	}
 }
 
+class CardMatches
+{
+	public List<CardMatch> Options { get; set; }
+
+	internal List<Card> Valid(Zone hand)
+	{
+		// Find if there are any cards that have all the properties for this match
+		//TODO: send back the list of cards that qualify
+		var ret = new List<Card>();
+		foreach (var list in Options)
+		{
+			var tmp = hand.Cards.Where(c => list.Match(c) && !ret.Contains(c));
+			if(tmp.Count() > 0) ret.AddRange(tmp);
+		}
+		return ret;
+	}
+}
+
+class GoalList
+{
+	public string Category { get; set; }
+	public List<CardMatches> CardMatches { get; set; }
+	public bool MultipleInstancesAllowed { get; set; }
+
+	internal bool Valid(Zone hand)
+	{
+		var chosen = new List<List<Card>>();
+		
+		foreach(var cm in CardMatches)
+		{			
+			var tmp = cm.Valid(hand);
+			if(tmp.Count() == 0) return false;
+			
+			chosen.Add(tmp);
+		}
+		chosen = chosen.OrderBy(c => c.Count()).ToList();
+		//var names = hand.Cards.Select(c => c.Name).ToList();
+		while(chosen.Count() > 0)
+		{
+			var f = chosen.FirstOrDefault();
+			chosen.Remove(f);
+			foreach(var c in chosen)
+			{
+				c.Remove(f.FirstOrDefault());
+				if(c.Count()==0) return false;
+			}
+		}
+		
+		return true;
+	}
+}
+
+void EvaluteHands(int limit, State deck, List<GoalList> validHands)
+{
+	deck.Expand();
+	new {
+		DeckSize = deck["Deck"].Cards.Count(),
+		ExtraDeckSize = deck["ExtraDeck"].Cards.Count()
+	}.Dump("Starting Counts");
+	
+	var sw = new Stopwatch();
+	sw.Start();
+	var results = new Dictionary<string, int>();
+	
+	for(var test = 0;test<limit;test++)
+	{
+		var td = deck.Copy();
+		
+		var deckZone = td["Deck"];
+		var handZone = td["Hand"];
+		
+		handZone.AddCard(deckZone.RemoveRandomCard());
+		handZone.AddCard(deckZone.RemoveRandomCard());
+		handZone.AddCard(deckZone.RemoveRandomCard());
+		handZone.AddCard(deckZone.RemoveRandomCard());
+		handZone.AddCard(deckZone.RemoveRandomCard());
+		
+		var res = EvaluateHand(td, validHands);
+
+		if (res == string.Empty)
+		{
+			res = "Fail";
+			//handZone.Cards.Select(c => c.Name).Dump();
+		}
+		
+		if(!results.ContainsKey(res)) results.Add(res, 0);
+		
+		results[res]++;
+	}
+	sw.Stop();
+	
+	results.Dump("Hands");
+	
+	sw.Elapsed.TotalSeconds.Dump();
+}
+
+string EvaluateHand(State td, List<GoalList> validHands)
+{
+	var hand = td["Hand"];
+	foreach(var vhand in validHands)
+	{
+		//if(!validHands.Any(h => h.Valid(hand)))
+		//{
+		//	return false;
+		//}
+		
+		if(vhand.Valid(hand)) return vhand.Category;
+	}
+	
+	return string.Empty;
+}
+
+#region simulator
 List<PotentialMove> GetLeafs(List<PotentialMove> potentialMoves)
 {
 	var ret = new List<PotentialMove>();
@@ -221,7 +356,7 @@ List<PotentialMove> CreateMap(State state, List<DeltaDescription> deltas)
 		var move = q.Dequeue();
 		var numQueued = 0;
 
-		state = move.Move.Execute(move.State);
+		state = move.Move.Execute(move.State, move.Id);
 
 		foreach (var d in deltas)
 		{
@@ -264,7 +399,9 @@ List<PotentialMove> CreateMap(State state, List<DeltaDescription> deltas)
 			}};
 	}
 }
+#endregion
 
+#region Deck_Helpers
 class PotentialMove
 {
 	public Guid Id { get; set; } = Guid.NewGuid();
@@ -278,12 +415,17 @@ class PotentialMove
 	}
 }
 
+class HistoryItem {
+	public Guid PMId { get; set; }
+	public DeltaDescription Delta { get; set; }
+}
+
 class State
 {
 	public string Deckname { get; set; }
 	public List<Zone> Zones { get; set; }
 	
-	public List<DeltaDescription> History { get; set; } = new List<DeltaDescription>();
+	public List<HistoryItem> History { get; set; } = new List<HistoryItem>();
 
 	internal State Copy()
 	{
@@ -339,6 +481,11 @@ class Zone {
 		var c = Cards.FirstOrDefault(ca => ca.Name == v);
 		Cards.Remove(c);
 		return c;
+	}
+
+	internal Card RemoveRandomCard()
+	{
+		return Cards.OrderBy(c => Guid.NewGuid()).FirstOrDefault();
 	}
 }
 
@@ -455,7 +602,7 @@ class DeltaDescription
 		};
 	}
 
-	internal State Execute(State state)
+	internal State Execute(State state, Guid Id)
 	{
 		var s = state.Copy();
 		
@@ -479,7 +626,12 @@ class DeltaDescription
 			zStart.Cards.Remove(c);
 			zEnd.Cards.Add(c);
 		}
-		s.History.Add(this);
+		s.History.Add(
+			new HistoryItem
+			{
+				PMId = Id,
+				Delta = this
+			});
 		return s;
 	}
 
@@ -532,12 +684,6 @@ class Delta
 	}
 }
 
-//class Requirement
-//{
-//	public string ZoneLabel { get; set; }
-//	public string CardName { get; set; }
-//}
-
 class Card
 {
 	public string Name { get; set; }
@@ -565,13 +711,69 @@ class Card
 		return properties.All(p => Properties.Contains(p));
 	}
 }
+#endregion
 
+#region test_cases
+void DrytronTest(List<State> decks)
+{
+	// Drytron
+	var d = decks.FirstOrDefault(d => d.Deckname == "DrytronMD");
+	var desc = DeltaDescription.ReadFile(d, "DrytronMD.json");
+	d = d.Expand();
+	//desc.Dump("Moves");
+	var deckZone = d["Deck"];
+	var handZone = d["Hand"];
 
-///
-/// 
-/// 
-/// 
-/// 
+	handZone.AddCard(deckZone.RemoveCard("Drytron Alpha Thuban"));
+	handZone.AddCard(deckZone.RemoveCard("Drytron Zeta Aldhibah"));
+	var leafs = GetLeafs(CreateMap(d, desc));
+	leafs.Count().Dump("Total: ");
+	leafs
+		.Where(d =>
+			d.State["Field"]
+				.Cards
+				.Any(c => c.Name == "Herald Of Perfection") &&
+			d.State["Field"]
+				.Cards
+				.Any(c => c.Name == "Herald Of Perfection")).Dump("Finished");
+
+	//Simulate(10, d, desc);
+}
+
+void DragonMaidTest(List<State> decks)
+{
+	var d = decks.FirstOrDefault(d => d.Deckname == "Dragonmaid").Expand();
+	var desc = System.Text.Json.JsonSerializer.Deserialize<List<DeltaDescription>>(File.ReadAllText(Path.Combine(DIR, "Dragonmaid.json")));
+	desc.Count().Dump();
+	var deckZone = d["Deck"];
+	var handZone = d["Hand"];
+
+	// Situation 1
+	//handZone.AddCard(deckZone.RemoveCard("Solemn Strike"));
+	//handZone.AddCard(deckZone.RemoveCard("Ash Blossom & Joyous Spring"));
+	//handZone.AddCard(deckZone.RemoveCard("Gold Sarcophagus"));
+	//handZone.AddCard(deckZone.RemoveCard("Dragonmaid Hospitality"));
+	//handZone.AddCard(deckZone.RemoveCard("Nurse Dragonmaid"));
+	// Situation 2
+	//handZone.AddCard(deckZone.RemoveCard("Nurse Dragonmaid"));
+	//handZone.AddCard(deckZone.RemoveCard("Dragonmaid Tidying"));
+	//handZone.AddCard(deckZone.RemoveCard("Dragonmaid Changeover"));
+	//handZone.AddCard(deckZone.RemoveCard("Monster Reborn"));
+	//handZone.AddCard(deckZone.RemoveCard("World Legacy Guardragon"));
+	// Situation 3
+	//handZone.AddCard(deckZone.RemoveCard("Noctovision Dragon"));
+	//handZone.AddCard(deckZone.RemoveCard("Noctovision Dragon"));
+	//handZone.AddCard(deckZone.RemoveCard("Dragonmaid Changeover"));
+	//handZone.AddCard(deckZone.RemoveCard("Dragonmaid Tinkhec"));
+	//handZone.AddCard(deckZone.RemoveCard("World Legacy Guardragon"));
+	// Situation 4
+	handZone.AddCard(deckZone.RemoveCard("Dragonmaid Hospitality"));
+	handZone.AddCard(deckZone.RemoveCard("Parlor Dragonmaid"));
+	handZone.AddCard(deckZone.RemoveCard("Ash Blossom & Joyous Spring"));
+	handZone.AddCard(deckZone.RemoveCard("Dragonmaid Tidying"));
+	handZone.AddCard(deckZone.RemoveCard("Red-Eyes Darkness Metal Dragon"));
+	GetLeafs(CreateMap(d, desc)).Dump("Finished");
+}
 State DrytronTest1_State()
 {
 	return new State
@@ -692,3 +894,4 @@ List<DeltaDescription> DrytronTest1_DeltaDescription()
 		},
 	};
 }
+#endregion

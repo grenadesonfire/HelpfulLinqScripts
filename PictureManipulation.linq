@@ -8,11 +8,11 @@
 
 void Main()
 {
-	var piecesDir = @"D:\Media\Furry\Xpray\Characters\Muscular Dragoness\Alts";
-	var basePhoto = @"D:\Media\Furry\Xpray\Characters\Muscular Dragoness\xpr_muscledragoness_color (High-res).jpg";
+	var piecesDir = @"D:\Media\Furry\Xpray\Characters\Aurenn Mayternity 2022\Alts";
+	var basePhoto = @"D:\Media\Furry\Xpray\Characters\Aurenn Mayternity 2022\xpr_aurennmayternity_color (High-Res).jpg";
 	var dir = @"D:\Media\Furry\Creations\Alts_38";
 	
-	MakeDiffs(piecesDir, basePhoto, skipPieces: false);
+	MakeDiffs(piecesDir, basePhoto, skipPieces: false, onlyGenerateFiles: false);
 	
 	//PictureEditorWindow(piecesDir, basePhoto, dir);
 

@@ -1,0 +1,267 @@
+[
+	{
+		"Deltas": [
+			{
+				"CardName": "Drytron Gamma Eltanin",
+				"Start": "Graveyard",
+				"End": "Field"
+			},
+			{
+				"Properties": [ "Monster", "Drytron" ],
+				"Start": "Field",
+				"End": "Graveyard"
+			},
+			{
+				"Properties": [ "Monster", "Drytron", "LV1" ],
+				"Start": "Graveyard",
+				"End": "Field"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"Properties": [ "Monster" ],
+				"Start": "Field",
+				"End": "Graveyard"
+			},
+			{
+				"Properties": [ "Monster" ],
+				"Start": "Field",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "I:P Masquerena",
+				"Start": "ExtraDeck",
+				"End": "Field"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Cyber Angel Benten",
+				"Start": "Field",
+				"End": "XYZMats"
+			},
+			{
+				"CardName": "Diviner of the Herald",
+				"Start": "Field",
+				"End": "Banish"
+			},
+			{
+				"CardName": "Eva",
+				"Start": "Deck",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Herald of the Arc Light",
+				"Start": "Graveyard",
+				"End": "Banish"
+			},
+			{
+				"CardName": "Beatrice, Lady of the Eternal",
+				"Start": "ExtraDeck",
+				"End": "Field"
+			},
+			{
+				"CardName": "Diviner of the Herald",
+				"Start": "Deck",
+				"End": "Hand"
+			},
+			{
+				"CardName": "Herald Of Orange Light",
+				"Start": "Deck",
+				"End": "Hand"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Drytron Mu Beta Fafnir",
+				"Count": 3,
+				"Start": "Field",
+				"End": "Field"
+			},
+			{
+				"Properties": [ "Drytron", "Monster", "LV1" ],
+				"Start": "XYZMats",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Meteonis Drytron",
+				"Start": "Hand",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Herald Of Perfection",
+				"Start": "Hand",
+				"End": "Field"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Drytron Mu Beta Fafnir",
+				"Count": 3,
+				"Start": "Field",
+				"End": "Field"
+			},
+			{
+				"Properties": [ "Drytron", "Monster", "LV1" ],
+				"Start": "XYZMats",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Meteonis Drytron",
+				"Start": "Graveyard",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Cyber Angel Benten",
+				"Start": "Graveyard",
+				"End": "Field"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Drytron Mu Beta Fafnir",
+				"Count": 3,
+				"Start": "Field",
+				"End": "Field"
+			},
+			{
+				"Properties": [ "Drytron", "Monster", "LV1" ],
+				"Start": "XYZMats",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Meteonis Drytron",
+				"Start": "Hand",
+				"End": "Hand"
+			},
+			{
+				"CardName": "Cyber Angel Idaten",
+				"Start": "Graveyard",
+				"End": "Field"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Drytron Alpha Thuban",
+				"Start": "Hand",
+				"End": "Field"
+			},
+			{
+				"Properties": [ "Drytron", "Monster" ],
+				"Start": "Hand",
+				"End": "Graveyard"
+			},
+			{
+				"Properties": ["Ritual", "Monster"],
+				"Start": "Deck",
+				"End": "Hand"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Drytron Zeta Aldhibah",
+				"Start": "Graveyard",
+				"End": "Field"
+			},
+			{
+				"Properties": ["Ritual", "Monster"],
+				"Start": "Hand",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Meteonis Drytron",
+				"Start": "Deck",
+				"End": "Hand"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"Properties": ["Drytron", "Monster", "LV1" ],
+				"Start": "Field",
+				"End": "XYZMats"
+			},
+			{
+				"Properties": ["Drytron", "Monster", "LV1" ],
+				"Start": "Field",
+				"End": "XYZMats"
+			},
+			{
+				"CardName": "Drytron Mu Beta Fafnir",
+				"Count": 3,
+				"Start": "ExtraDeck",
+				"End": "Field"
+			},
+			{
+				"CardName": "Drytron Gamma Eltanin",
+				"Count": 3,
+				"Start": "Deck",
+				"End": "Graveyard"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Drytron Zeta Aldhibah",
+				"Start": "Graveyard",
+				"End": "Field"
+			},
+			{
+				"CardName": "Cyber Angel Benten",
+				"Start": "Hand",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Diviner of the Herald",
+				"Start": "Deck",
+				"End": "Hand"
+			},
+			{
+				"CardName": "Meteonis Drytron",
+				"Start": "Deck",
+				"End": "Hand"
+			}
+		]
+	},
+	{
+		"Deltas": [
+			{
+				"CardName": "Diviner of the Herald",
+				"Start": "Hand",
+				"End": "Field"
+			},
+			{
+				"CardName": "Diviner of the Herald",
+				"Count": 2,
+				"Start": "Deck",
+				"End": "Deck"
+			},
+			{
+				"CardName": "Herald of the Arc Light",
+				"Start": "ExtraDeck",
+				"End": "Graveyard"
+			},
+			{
+				"CardName": "Herald Of Perfection",
+				"Start": "Deck",
+				"End": "Hand"
+			}
+		]
+	}
+]

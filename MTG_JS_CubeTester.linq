@@ -6,7 +6,7 @@ void Main()
 	var list = System.Text.Json.JsonSerializer.Deserialize<JSCmdrCubeDefinition>(File.ReadAllText(Path.Combine(PARTS_DIR, "parts.json")));	
 	
 	//var randDeck = Pairing.Random(list, list.DeckHalves.FirstOrDefault(dh => dh.File == "Sakashima.dck"));
-	var randDeck = Pairing.RandomWithRare(list);
+	var randDeck = Pairing.RandomWithMythic(list);
 	
 	new {
 		Identity = randDeck.Identity,
@@ -43,6 +43,14 @@ class Pairing {
 	internal static Pairing RandomWithRare(JSCmdrCubeDefinition list)
 	{
 		var partner1 = list.DeckHalves.OrderBy(dh => Guid.NewGuid()).FirstOrDefault(dh => dh.Rarity == "R");
+		var partner2 = list.DeckHalves.OrderBy(dh => Guid.NewGuid()).FirstOrDefault(dh => dh.Identity != partner1.Identity && dh.Rarity == "U");
+
+		return FinishPairing(list, partner1, partner2);
+	}
+
+	internal static Pairing RandomWithMythic(JSCmdrCubeDefinition list)
+	{
+		var partner1 = list.DeckHalves.OrderBy(dh => Guid.NewGuid()).FirstOrDefault(dh => dh.Rarity == "M");
 		var partner2 = list.DeckHalves.OrderBy(dh => Guid.NewGuid()).FirstOrDefault(dh => dh.Identity != partner1.Identity && dh.Rarity == "U");
 
 		return FinishPairing(list, partner1, partner2);
